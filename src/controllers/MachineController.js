@@ -27,13 +27,11 @@ export class MachineController {
         // --- CONSTRAINT: HITTEGOLF (> 35 graden) ---
         // --- CONSTRAINT: HITTEGOLF (> 35 graden) ---
         if (AppStore.weather.heatWave) {
-            // Tel hoeveel machines er draaien IN DEZELFDE HALL
-            const runningMachinesInHall = AppStore.machines.filter(m =>
-                m.status === 'running' && m.hall === machine.hall
-            ).length;
+            // Tel ALLE draaiende machines in de fabriek (ongeacht Hal)
+            const runningMachinesTotal = AppStore.machines.filter(m => m.status === 'running').length;
 
-            if (runningMachinesInHall >= 1) {
-                alert(`HITTEGOLF ALARM in Hall ${machine.hall}: Het is te heet! Er mag maximaal 1 machine tegelijk draaien per hal.`);
+            if (runningMachinesTotal >= 1) {
+                alert(`HITTEGOLF ALARM: Het is te heet! Er mag maximaal 1 machine in de HELE fabriek draaien.`);
                 return; // Stop actie
             }
         }
