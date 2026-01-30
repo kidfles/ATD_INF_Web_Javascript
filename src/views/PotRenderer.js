@@ -9,7 +9,6 @@ export class PotRenderer {
 
         // --- FIX: MAAK HEM SLEEPBAAR ---
         el.setAttribute('draggable', 'true');
-        // -------------------------------
 
         // We koppelen het ID zodat de Controller weet WELKE pot dit is
         el.dataset.id = potModel.id;

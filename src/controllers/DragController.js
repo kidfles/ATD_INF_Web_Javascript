@@ -41,49 +41,51 @@ export class DragController {
     }
 
     handleDragOver(e) {
-        e.preventDefault(); // Cruciaal!
+        e.preventDefault();
 
-        const dropZone = e.target.closest('.pot');
+        // 1. Check POT drops
+        const potDropZone = e.target.closest('.pot');
+        if (potDropZone && this.draggedItem) {
+            const potId = potDropZone.dataset.id;
+            const potModel = AppStore.getPot(potId);
+            const ingredientModel = AppStore.getIngredient(this.draggedItem.id);
 
-        // Als we niet boven een pot hangen, of we slepen niks, stop dan.
-        if (!dropZone || !this.draggedItem) return;
+            if (potModel && ingredientModel) {
+                let isValid = false;
+                if (potModel.isEmpty()) {
+                    isValid = true;
+                } else {
+                    isValid = potModel.ingredients[0].speed === ingredientModel.speed;
+                }
 
-        const potId = dropZone.dataset.id;
-
-        // Haal data op uit de store
-        const potModel = AppStore.getPot(potId);
-        const ingredientModel = AppStore.getIngredient(this.draggedItem.id);
-
-        // DEBUG: Als dit faalt, zien we het in de console
-        if (!potModel) {
-            console.warn("Pot model niet gevonden in AppStore:", potId);
-            return;
-        }
-        if (!ingredientModel) {
-            console.warn("Ingrediënt model niet gevonden in AppStore:", this.draggedItem.id);
-            return;
-        }
-
-        // Check regels: Pot leeg? OF Snelheid gelijk?
-        let isValid = false;
-        if (potModel.isEmpty()) {
-            isValid = true;
-        } else {
-            isValid = potModel.ingredients[0].speed === ingredientModel.speed;
-            if (!isValid) {
-                // Console log om te zien waarom het niet mag (handig voor dev)
-                // console.log(`Speed mismatch: Pot=${potModel.ingredients[0].speed} vs Item=${ingredientModel.speed}`);
+                if (isValid) {
+                    e.dataTransfer.dropEffect = 'copy';
+                    potDropZone.classList.add('drag-over-valid');
+                    potDropZone.classList.remove('drag-over-invalid');
+                    return; // Done
+                } else {
+                    e.dataTransfer.dropEffect = 'none';
+                    potDropZone.classList.add('drag-over-invalid');
+                    potDropZone.classList.remove('drag-over-valid');
+                    return; // Done
+                }
             }
         }
 
-        if (isValid) {
-            e.dataTransfer.dropEffect = 'copy';
-            dropZone.classList.add('drag-over-valid');
-            dropZone.classList.remove('drag-over-invalid');
-        } else {
-            e.dataTransfer.dropEffect = 'none';
-            dropZone.classList.add('drag-over-invalid');
-            dropZone.classList.remove('drag-over-valid');
+        // 2. Check MACHINE drops
+        const machineSlot = e.target.closest('.machine-slot');
+        if (machineSlot && this.draggedItem && this.draggedItem.type === 'pot') {
+            const machineId = machineSlot.dataset.machineId;
+            const machine = AppStore.machines.find(m => m.id === machineId);
+            const pot = AppStore.getPot(this.draggedItem.id);
+
+            if (machine && pot && !pot.isEmpty()) {
+                if (machine.configuredSpeed === pot.ingredients[0].speed) {
+                    machineSlot.classList.add('drag-over-valid');
+                    e.dataTransfer.dropEffect = 'copy';
+                    return;
+                }
+            }
         }
     }
 
@@ -92,24 +94,70 @@ export class DragController {
         if (dropZone) {
             dropZone.classList.remove('drag-over-valid', 'drag-over-invalid');
         }
+
+        const machineSlot = e.target.closest('.machine-slot');
+        if (machineSlot) {
+            machineSlot.classList.remove('drag-over-valid');
+        }
     }
 
     handleDrop(e) {
         e.preventDefault();
 
-        // Reset de opacity (zoek het element via ID omdat 'target' hier de pot is)
         if (this.draggedItem) {
             const originalEl = document.querySelector(`[data-id="${this.draggedItem.id}"]`);
             if (originalEl) originalEl.style.opacity = '1';
         }
 
         const dropZone = e.target.closest('.pot');
-        if (dropZone) dropZone.classList.remove('drag-over-valid', 'drag-over-invalid');
+        if (dropZone) {
+            dropZone.classList.remove('drag-over-valid', 'drag-over-invalid');
+            if (this.draggedItem) {
+                this.processDrop(dropZone.dataset.id, this.draggedItem.id);
+            }
+            this.draggedItem = null;
+            return;
+        }
 
-        if (!dropZone || !this.draggedItem) return;
+        const machineSlot = e.target.closest('.machine-slot');
+        if (machineSlot && this.draggedItem && this.draggedItem.type === 'pot') {
+            machineSlot.classList.remove('drag-over-valid');
+            this.processMachineDrop(machineSlot.dataset.machineId, this.draggedItem.id);
+            this.draggedItem = null;
+            return;
+        }
 
-        this.processDrop(dropZone.dataset.id, this.draggedItem.id);
-        this.draggedItem = null; // Reset
+        this.draggedItem = null;
+    }
+
+    processMachineDrop(machineId, potId) {
+        // We verplaatsen de pot DOM naar het slot
+        const potEl = document.querySelector(`.pot[data-id="${potId}"]`);
+        const slotEl = document.querySelector(`.machine-slot[data-machineId="${machineId}"]`);
+
+        if (potEl && slotEl) {
+            // Check even of er al niet iets staat
+            if (slotEl.children.length > 0) {
+                alert("Er staat al een pot in deze machine!");
+                return;
+            }
+
+            // Verplaats fysiek
+            slotEl.appendChild(potEl);
+
+            // Update het Machine Model
+            const machine = AppStore.machines.find(m => m.id === machineId);
+            const pot = AppStore.getPot(potId);
+
+            try {
+                machine.loadPot(pot);
+                console.log(`Pot geladen in machine ${machineId}`);
+            } catch (e) {
+                alert(e.message);
+                // Zet pot terug (zou eigenlijk in de catch moeten)
+                document.querySelector('.pot-container').appendChild(potEl);
+            }
+        }
     }
 
     processDrop(potId, ingredientId) {

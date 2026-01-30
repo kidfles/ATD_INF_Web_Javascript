@@ -74,3 +74,93 @@
     transform: scale(0.6);
     margin: -10px; /* Beetje overlap */
 }
+
+/* --- Machine Styles --- */
+.machine-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 40px;
+    padding: 20px;
+    border-top: 2px dashed #ccc;
+}
+
+.machine {
+    background: #333;
+    color: white;
+    width: 250px;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.machine-status {
+    font-family: monospace;
+    color: #0f0;
+    margin-bottom: 10px;
+}
+
+/* De plek waar je de pot in dropt */
+.machine-slot {
+    width: 120px;
+    height: 140px;
+    background: #555;
+    border: 2px dashed #777;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    transition: background 0.3s;
+}
+
+.machine-slot.drag-over-valid {
+    background: #4CAF50; /* Groen licht als je er een pot boven houdt */
+}
+
+/* Start knop */
+.btn-mix {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.btn-mix:disabled {
+    background: #555;
+    cursor: not-allowed;
+    color: #888;
+}
+
+/* De Uitgang (Waar de pot verschijnt na mixen) */
+.machine-output {
+    margin-top: 10px;
+    width: 100%;
+    height: 10px; /* Klein streepje, wordt groter als er iets uitkomt? Of we zetten hem eronder */
+    background: #222;
+}
+
+/* --- Animatie: SHAKE --- */
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.machine-running {
+    animation: shake 0.5s;
+    animation-iteration-count: infinite; /* Blijven shaken zolang hij draait */
+    background: #442200; /* Beetje kleurverandering */
+}
