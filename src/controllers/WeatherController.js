@@ -16,7 +16,7 @@ export class WeatherController {
                 <option value="rain">Simulatie: Regen (15°C)</option>
             `;
 
-            // Listen for changes
+            // Luister naar wijzigingen
             this.displayElement.addEventListener('change', (e) => this.manualOverride(e.target.value));
         }
 

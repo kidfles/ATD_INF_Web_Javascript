@@ -1,26 +1,31 @@
 export class Machine {
     constructor(id, configuredSpeed, configuredTime = null) {
         this.id = id;
-        this.configuredSpeed = configuredSpeed; // The speed this machine runs at
-        this.configuredTime = configuredTime;   // Override time (ms) or null
-        this.status = 'idle'; // Options: 'idle', 'running', 'done'
+        this.configuredSpeed = configuredSpeed; // De snelheid waarop deze machine draait
+        this.configuredTime = configuredTime;   // Tijd override (ms) of null
+        this.status = 'idle'; // Opties: 'idle', 'running', 'done'
         this.currentPot = null;
 
-        // NIEUW: default hal is 1
+        // Standaard hal is 1
         this.hall = 1;
     }
 
     /**
-     * Attempts to place a pot in the machine.
+     * Probeert een pot in de machine te plaatsen.
      * @param {Pot} pot 
-     * @returns {boolean} true if successful
+     * @returns {boolean} true indien succesvol
      */
     loadPot(pot) {
         if (this.status !== 'idle') {
             throw new Error("Machine is busy!");
         }
 
-        // Validation: Does the machine speed match the pot contents?
+        // Validatie: Is de pot leeg?
+        if (pot.isEmpty()) {
+            throw new Error("Deze pot is leeg! Vul hem eerst met een ingrediënt.");
+        }
+
+        // Validatie: Matcht de machine snelheid met de pot inhoud?
         if (!pot.isEmpty() && Number(pot.ingredients[0].speed) !== Number(this.configuredSpeed)) {
             throw new Error(`Machine speed (${this.configuredSpeed}) does not match Ingredient speed.`);
         }

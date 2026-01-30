@@ -503,3 +503,36 @@ dialog::backdrop {
     background: #2c3e50;
     color: white;
 }
+
+.color-grid-square {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.color-grid-square.empty {
+    background-color: #eee;
+}
+
+.analysis-wrapper {
+    text-align: center;
+}
+
+.analysis-swatch {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.analysis-info {
+    font-size: 12px;
+}
+
+.analysis-details {
+    font-size: 10px;
+    color: #666;
+}

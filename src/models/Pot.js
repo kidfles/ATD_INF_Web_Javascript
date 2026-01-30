@@ -1,24 +1,24 @@
 export class Pot {
     constructor() {
         this.id = crypto.randomUUID();
-        this.ingredients = []; // Array of Ingredient objects
-        this.maxIngredients = 5; // Default value, as it's used in addIngredient
+        this.ingredients = []; // Array van Ingredient objecten
+        this.maxIngredients = 67; // Standaardwaarde, gebruikt in addIngredient
         this.isMixed = false;
-        this.finalColor = null; // Will be set after mixing
+        this.finalColor = null; // Wordt gezet na het mixen
     }
 
     /**
-     * Adds an ingredient if validation passes.
+     * Voegt een ingrediënt toe als de validatie slaagt.
      * @param {Ingredient} ingredient
-     * @throws {Error} If mixing speeds do not match.
+     * @throws {Error} Als mengsnelheden niet overeenkomen.
      */
     addIngredient(ingredient) {
-        // Validation 1: Pot Full?
+        // Validatie 1: Pot Vol?
         if (this.ingredients.length >= this.maxIngredients) {
             throw new Error("Pot is vol!");
         }
 
-        // Validation 2: Speed Match? (Alleen als er al iets in zit)
+        // Validatie 2: Snelheid Match? (Alleen als er al iets in zit)
         if (this.ingredients.length > 0) {
             const currentSpeed = this.ingredients[0].speed;
             if (ingredient.speed !== currentSpeed) {
@@ -51,7 +51,7 @@ export class Pot {
         // 2. Update de state
         this.finalColor = {
             h: Math.round(avgHue),
-            s: 100, // Lekker fel
+            s: 100,
             l: 50
         };
         this.isMixed = true;
@@ -59,13 +59,13 @@ export class Pot {
     }
 
     /**
-     * Calculates total mix time based on the "slowest" ingredient (highest time).
-     * @returns {number} Time in milliseconds
+     * Berekent de totale mengtijd gebaseerd op het "traagste" ingrediënt (hoogste tijd).
+     * @returns {number} Tijd in milliseconden
      */
     calculateBaseMixTime() {
         if (this.ingredients.length === 0) return 0;
 
-        // Find the ingredient with the highest mix time
+        // Vind het ingrediënt met de hoogste mengtijd
         return Math.max(...this.ingredients.map(ing => ing.baseTime));
     }
 

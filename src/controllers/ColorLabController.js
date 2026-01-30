@@ -40,10 +40,7 @@ export class ColorLabController {
         // 6x6 Grid = 36 vakjes
         for (let i = 0; i < 36; i++) {
             const square = document.createElement('div');
-            square.style.width = '40px';
-            square.style.height = '40px';
-            square.style.border = '1px solid #ccc';
-            square.style.cursor = 'pointer';
+            square.classList.add('color-grid-square');
 
             // Als we gemengde verf hebben, gebruik die. Anders random/grijs.
             // Voor de demo vullen we ze random of met de laatst gemengde pot
@@ -60,7 +57,7 @@ export class ColorLabController {
                 // Click Event voor Triadic Popup
                 square.addEventListener('click', () => this.showAnalysis(hue));
             } else {
-                square.style.backgroundColor = '#eee';
+                square.classList.add('empty');
                 square.title = "Meng eerst verf om dit te vullen!";
             }
 
@@ -75,25 +72,20 @@ export class ColorLabController {
 
         colors.forEach((col, index) => {
             const wrapper = document.createElement('div');
-            wrapper.style.textAlign = 'center';
+            wrapper.classList.add('analysis-wrapper');
 
             const div = document.createElement('div');
-            div.style.width = '80px';
-            div.style.height = '80px';
+            div.classList.add('analysis-swatch');
             div.style.backgroundColor = `hsl(${col.h}, ${col.s}%, ${col.l}%)`;
-            div.style.borderRadius = '50%';
-            div.style.marginBottom = '5px';
-            div.style.border = '2px solid #fff';
-            div.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
 
             const info = document.createElement('div');
+            info.classList.add('analysis-info');
             info.innerHTML = `
                 <strong>${index === 0 ? "Basis" : "Triadic"}</strong><br>
-                <span style="font-size:10px; color:#666;">
+                <span class="analysis-details">
                     HSL(${col.h}, ${col.s}%, ${col.l}%)
                 </span>
             `;
-            info.style.fontSize = '12px';
 
             wrapper.appendChild(div);
             wrapper.appendChild(info);
