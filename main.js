@@ -16,9 +16,18 @@ import { ColorLabController } from './src/controllers/ColorLabController.js';
 import { CreatorController } from './src/controllers/CreatorController.js';
 
 // 1. Globale Foutafhandeling (De "Craft")
+// 1. Globale Foutafhandeling (De "Craft")
 window.addEventListener('unhandledrejection', (event) => {
-    console.error("CRITICAL ASYNC ERROR:", event.reason);
-    alert(`Oeps! Er ging iets mis: ${event.reason.message || event.reason}`);
+    // Check of het onze eigen AppError is
+    if (event.reason && event.reason.name === 'AppError') {
+        console.warn("Afgevangen AppError:", event.reason);
+        alert(`Fout in fabriek: ${event.reason.message} (Code: ${event.reason.code})`);
+        event.preventDefault(); // Voorkom standaard console error
+    } else {
+        // Onbekende, kritieke fouten
+        console.error("CRITICAL ASYNC ERROR:", event.reason);
+        alert(`Oeps! Er ging iets mis: ${event.reason.message || event.reason}`);
+    }
 });
 
 // 2. Applicatie Initialisatie

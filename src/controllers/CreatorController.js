@@ -42,10 +42,6 @@ export class CreatorController {
 
         // Nieuwe Machine
         document.getElementById('btn-create-mach').addEventListener('click', () => this.createMachine());
-
-        // NIEUW: Kleurmodus Schakelaar (Verwijderd in verfijning)
-        // const colorMode = document.getElementById('new-ing-color-mode');
-        // logica verwijderd.
     }
 
     createIngredient() {

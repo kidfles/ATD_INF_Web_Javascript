@@ -37,7 +37,13 @@ export class WeatherController {
                 const rawData = await WeatherService.fetchCurrentWeather(51.69, 5.30);
                 this.processWeatherData(rawData);
             } catch (error) {
-                console.error("Live fetch failed:", error);
+                if (error.name === 'AppError' && error.code === 'WEATHER_FETCH_FAILED') {
+                    console.warn("Live weer kon niet worden opgehaald, fallback naar normaal.");
+                } else {
+                    console.error("Onverwachte fout in weer module:", error);
+                }
+
+                // Fallback naar simulatie
                 this.processWeatherData({ temperature: 20, weathercode: 3 });
                 this.updateDisplay("Fout! (20°C)");
             }

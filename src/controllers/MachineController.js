@@ -1,4 +1,5 @@
 import { AppStore } from '../utils/AppStore.js';
+import { AppError, ERROR_CODES } from '../utils/AppError.js';
 import { MachineRenderer } from '../views/MachineRenderer.js';
 import { PotRenderer } from '../views/PotRenderer.js';
 
@@ -25,17 +26,28 @@ export class MachineController {
         }
 
         // --- CONSTRAINT: HITTEGOLF (> 35 graden) ---
-        if (AppStore.weather.heatWave) {
-            // Tel ALLE draaiende machines in de fabriek (ongeacht Hal)
-            const runningMachinesTotal = AppStore.machines.filter(m => m.status === 'running').length;
+        try {
+            if (AppStore.weather.heatWave) {
+                // Tel ALLE draaiende machines
+                const runningMachinesTotal = AppStore.machines.filter(m => m.status === 'running').length;
 
-            if (runningMachinesTotal >= 1) {
-                alert(`HITTEGOLF ALARM: Het is te heet! Er mag maximaal 1 machine in de HELE fabriek draaien.`);
-                return; // Stop actie
+                if (runningMachinesTotal >= 1) {
+                    throw new AppError(
+                        "Het is te heet! Slechts 1 machine mag draaien tijdens een hittegolf.",
+                        ERROR_CODES.HEATWAVE_LIMIT
+                    );
+                }
+            }
+
+            this.startMixingProcess(machine);
+        } catch (error) {
+            if (error.name === 'AppError') {
+                alert(`Fout: ${error.message}`);
+            } else {
+                console.error(error);
+                alert("Er ging iets mis bij het starten van de machine.");
             }
         }
-
-        this.startMixingProcess(machine);
     }
 
     startMixingProcess(machine) {

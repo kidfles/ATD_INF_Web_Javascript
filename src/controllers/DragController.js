@@ -154,13 +154,13 @@ export class DragController {
             return;
         }
 
-        // 3. Check COLOR GRID drops (Nieuw)
+        // 3. Check kleur lab drops 
         const gridSquare = e.target.closest('.grid-square');
         if (gridSquare && this.draggedItem && this.draggedItem.type === 'pot') {
             const pot = AppStore.getPot(this.draggedItem.id);
 
             if (pot && pot.isMixed) {
-                // Reset border
+                // Reset de border
                 gridSquare.style.borderColor = '#ccc';
 
                 // VERF HET VAKJE!
@@ -209,7 +209,13 @@ export class DragController {
                 machine.loadPot(pot);
                 console.log(`Pot geladen in machine ${machineId}`);
             } catch (e) {
-                alert(e.message);
+                // Behandel AppErrors specifiek
+                if (e.name === 'AppError' && e.code === 'MACHINE_SPEED_MISMATCH') {
+                    alert(`${e.message}\nTip: Gebruik een machine met dezelfde snelheid.`);
+                } else {
+                    alert(e.message);
+                }
+
                 // Zet pot terug naar waar hij vandaan kwam (rollback)
                 if (originalParent) {
                     originalParent.appendChild(potEl);
@@ -247,7 +253,18 @@ export class DragController {
             }
 
         } catch (error) {
-            alert(error.message);
+            // Visuele feedback bij fouten
+            if (error.name === 'AppError') {
+                const potEl = document.querySelector(`.pot[data-id="${potId}"]`);
+                if (potEl) {
+                    // Laat de pot schudden (visuele feedback)
+                    potEl.classList.add('shake-error');
+                    setTimeout(() => potEl.classList.remove('shake-error'), 500);
+                }
+                console.warn(`Drag actie mislukt: ${error.message} (${error.code})`);
+            } else {
+                alert(error.message);
+            }
         }
     }
 }

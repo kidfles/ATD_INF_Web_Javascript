@@ -1,3 +1,5 @@
+import { AppError, ERROR_CODES } from '../utils/AppError.js';
+
 export class WeatherService {
 
     /**
@@ -10,12 +12,15 @@ export class WeatherService {
         // URL bouwen: We willen current_weather weten
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
 
-        // Async / Await patroon (netter dan .then().then())
+        // Async / Await patroon
         const response = await fetch(url);
 
         // Fetch gooit GEEN error op 404 of 500, dus dat moeten we checken
         if (!response.ok) {
-            throw new Error(`Weer API faalde met status: ${response.status}`);
+            throw new AppError(
+                `Weer ophalen mislukt (status: ${response.status})`,
+                ERROR_CODES.WEATHER_FETCH_FAILED
+            );
         }
 
         const data = await response.json();
