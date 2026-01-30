@@ -25,9 +25,9 @@ try {
     console.log('--- Testing Data Models ---');
 
     // 1. Create Ingredients
-    const redSlime = new Ingredient('Red Slime', {h:0, s:100, l:50}, 5, 'slimy', 2000);
-    const blueDust = new Ingredient('Blue Dust', {h:240, s:100, l:50}, 5, 'grainy', 3000);
-    const fastGreen = new Ingredient('Fast Green', {h:120, s:100, l:50}, 9, 'smooth', 1000);
+    const redSlime = new Ingredient('Red Slime', { h: 0, s: 100, l: 50 }, 5, 'slimy', 2000);
+    const blueDust = new Ingredient('Blue Dust', { h: 240, s: 100, l: 50 }, 5, 'grainy', 3000);
+    const fastGreen = new Ingredient('Fast Green', { h: 120, s: 100, l: 50 }, 9, 'smooth', 1000);
 
     // 2. Create Pot
     const pot = new Pot();
@@ -35,7 +35,7 @@ try {
     // 3. Add Valid Ingredients
     console.log('Adding Red Slime...');
     pot.addIngredient(redSlime);
-    
+
     console.log('Adding Blue Dust (Same Speed)...');
     pot.addIngredient(blueDust); // Should work
 
