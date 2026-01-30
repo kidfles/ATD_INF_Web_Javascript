@@ -26,7 +26,7 @@ export class WeatherController {
             // Als de API stuk is, crasht de app NIET. We gaan over op 'Noodprotocol'.
             console.error("Weather Controller Error:", error);
 
-            this.updateDisplay("⚠️ Weer data onbeschikbaar. Standaard instellingen actief.");
+            this.updateDisplay("Weer data onbeschikbaar. Standaard instellingen actief.");
 
             // Zet veilige defaults in de store
             AppStore.setWeather({
@@ -83,9 +83,9 @@ export class WeatherController {
         const percentage = Math.round((modifier - 1) * 100);
         let statusText = `${this.location.name}: ${temp}°C`;
 
-        if (isRaining) statusText += " 🌧️";
-        if (temp > 35) statusText += " 🔥";
-        if (temp < 10) statusText += " ❄️";
+        if (isRaining) statusText += " (Regen)";
+        if (temp > 35) statusText += " (Hittegolf)";
+        if (temp < 10) statusText += " (Koud)";
 
         if (percentage > 0) {
             statusText += ` (Mengtijd +${percentage}%)`;

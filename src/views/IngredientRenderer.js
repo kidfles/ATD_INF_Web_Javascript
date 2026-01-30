@@ -29,7 +29,7 @@ export class IngredientRenderer {
         el.dataset.type = 'ingredient';
 
         // Eventueel een tooltipje voor de gebruiker
-        el.dataset.tooltip = `${ingredient.name} | ⏱️ ${ingredient.baseTime}ms | ⚡ Speed ${ingredient.speed}`;
+        el.dataset.tooltip = `${ingredient.name} | ${ingredient.baseTime}ms | Speed ${ingredient.speed}`;
 
         return el;
     }

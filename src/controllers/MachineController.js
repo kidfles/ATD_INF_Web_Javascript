@@ -28,7 +28,7 @@ export class MachineController {
             // Tel hoeveel machines er draaien
             const runningMachines = AppStore.machines.filter(m => m.status === 'running').length;
             if (runningMachines >= 1) {
-                alert("⛔ HITTEGOLF ALARM: Het is te heet (>35°C)! Er mag maximaal 1 machine tegelijk draaien.");
+                alert("HITTEGOLF ALARM: Het is te heet (>35!C)! Er mag maximaal 1 machine tegelijk draaien.");
                 return; // Stop actie
             }
         }
@@ -65,13 +65,21 @@ export class MachineController {
 
         if (potEl) {
             // Maak de pot visueel "klaar" (bijv. gouden randje)
-            potEl.style.borderColor = "gold";
-            potEl.style.boxShadow = "0 0 20px gold";
+            potEl.style.borderColor = "#FFD700"; // Goud
+            potEl.style.boxShadow = "0 0 15px #FFD700";
 
-            // Haal uit slot, zet onder machine (of in output bak)
-            // Voor nu: append aan de main container of een output divje
-            const machineContainer = slotEl.closest('.machine');
-            machineContainer.appendChild(potEl); // Zet hem onderaan de machine
+            // --- FIX: Verplaats naar de Output Area ---
+            const outputArea = document.getElementById('output-conveyor');
+
+            if (outputArea) {
+                outputArea.appendChild(potEl);
+
+                // Optioneel: speel een geluidje of animatie
+                console.log(`Pot verplaatst naar output band vanuit Machine ${machine.id}`);
+            } else {
+                // Fallback als area niet bestaat
+                slotEl.closest('.machine').appendChild(potEl);
+            }
         }
 
         machine.reset(); // Maak machine weer vrij voor de volgende

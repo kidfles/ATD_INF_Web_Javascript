@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
     container.appendChild(potArea);
 
     // 3. Maak Data (Ingredients)
-    const ing1 = new Ingredient("Rode Slijm (Speed 5)", { h: 0, s: 80, l: 50 }, 5, "slimy", 2000);
-    const ing2 = new Ingredient("Blauw Zand (Speed 5)", { h: 240, s: 70, l: 40 }, 5, "grainy", 3000);
-    const ing3 = new Ingredient("Groen Snel (Speed 9)", { h: 120, s: 90, l: 60 }, 9, "smooth", 1500);
+    const ing1 = new Ingredient("Rode Slijm", { h: 0, s: 80, l: 50 }, 5, "slimy", 2000);
+    const ing2 = new Ingredient("Blauw Zand", { h: 240, s: 70, l: 40 }, 5, "grainy", 3000);
+    const ing3 = new Ingredient("Groen Snel", { h: 120, s: 90, l: 60 }, 9, "smooth", 1500);
 
     // Stop ze in de store
     [ing1, ing2, ing3].forEach(ing => {
@@ -74,9 +74,31 @@ document.addEventListener('DOMContentLoaded', () => {
     AppStore.machines.push(machine1, machine2);
 
     // Render ze
+    // Render ze
     [machine1, machine2].forEach(m => {
         machineArea.appendChild(MachineRenderer.create(m));
     });
+
+    // 6. Maak Output Area (De lopende band voor klare potten)
+    const outputArea = document.createElement('div');
+    outputArea.id = 'output-conveyor'; // ID voor makkelijke toegang
+    outputArea.innerHTML = '<h3>Klaar voor transport</h3>';
+
+    // Wat styling direct hier (of verplaats naar CSS)
+    outputArea.style.cssText = `
+        margin-top: 10px;
+        padding: 10px;
+        background: #333;
+        border-top: 5px solid #FFD700; /* Goud randje */
+        min-height: 80px; /* Smaller height */
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        overflow-x: auto;
+        border-radius: 8px;
+    `;
+
+    container.appendChild(outputArea);
 
     // Start de controller logic
     new MachineController();
