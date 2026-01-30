@@ -412,6 +412,8 @@ nav button {
     gap: 15px;
     min-height: auto;
     /* Remove large min-height */
+    justify-content: center;
+    /* Center ingredients */
 }
 
 /* Pot Container cleanup */
