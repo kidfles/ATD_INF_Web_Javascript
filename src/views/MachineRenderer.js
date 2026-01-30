@@ -7,7 +7,6 @@ export class MachineRenderer {
         el.dataset.id = machine.id; // Belangrijk voor events
 
         // Header met info
-        // Header met info
         const title = document.createElement('div');
         let info = `<strong>Machine ${machine.id.substr(0, 4)}</strong><br>Snelheid: ${machine.configuredSpeed}`;
         if (machine.configuredTime) {
@@ -18,7 +17,7 @@ export class MachineRenderer {
         title.innerHTML = info;
         el.appendChild(title);
 
-        // [NEW] Delete Button
+        // Verwijder knop
         const delBtn = document.createElement('button');
         delBtn.innerHTML = '×';
         delBtn.className = 'btn-delete';
@@ -27,6 +26,16 @@ export class MachineRenderer {
         delBtn.style.right = '10px';
         delBtn.onclick = (e) => {
             e.stopPropagation();
+
+            // Check status via AppStore voordat we verwijderen
+            // We moeten de machine even ophalen uit de store om de status te checken
+            const currentMachine = AppStore.machines.find(m => m.id === machine.id);
+
+            if (currentMachine && currentMachine.status === 'running') {
+                alert("Je kan een draaiende machine niet verwijderen! Wacht tot hij klaar is.");
+                return;
+            }
+
             if (confirm(`Verwijder Machine ${machine.id}?`)) {
                 AppStore.removeMachine(machine.id);
                 el.remove();

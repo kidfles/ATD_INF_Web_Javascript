@@ -25,7 +25,6 @@ export class MachineController {
         }
 
         // --- CONSTRAINT: HITTEGOLF (> 35 graden) ---
-        // --- CONSTRAINT: HITTEGOLF (> 35 graden) ---
         if (AppStore.weather.heatWave) {
             // Tel ALLE draaiende machines in de fabriek (ongeacht Hal)
             const runningMachinesTotal = AppStore.machines.filter(m => m.status === 'running').length;
@@ -53,7 +52,7 @@ export class MachineController {
 
         console.log(`Start mixen. Basis: ${baseTime}ms, Weerfactor: ${AppStore.weather.timeModifier}, Totaal: ${finalTime}ms`);
 
-        // 2. Update State & UI
+        // 2. Update Status & UI
         machine.start();
         MachineRenderer.updateStatus(machine.id, `MIXING (${Math.round(finalTime)}ms)...`, true);
 
@@ -67,7 +66,7 @@ export class MachineController {
         machine.finish();
         MachineRenderer.updateStatus(machine.id, "DONE!", false);
 
-        // --- NIEUW: Voer de mix berekening uit ---
+        // Voer de mix berekening uit ---
         if (machine.currentPot) {
             machine.currentPot.mix();
         }
@@ -79,11 +78,11 @@ export class MachineController {
         const potEl = slotEl.querySelector('.pot');
 
         if (potEl) {
-            // Maak de pot visueel "klaar" (bijv. gouden randje)
+            // Maak de pot visueel "klaar" (gouden randje)
             potEl.style.borderColor = "#FFD700"; // Goud
             potEl.style.boxShadow = "0 0 15px #FFD700";
 
-            // --- FIX: Verplaats naar de Output Area ---
+            //Verplaats naar de Output Area 
             const outputArea = document.getElementById('output-conveyor');
 
             if (outputArea) {
@@ -92,7 +91,7 @@ export class MachineController {
                 // Optioneel: speel een geluidje of animatie
                 console.log(`Pot verplaatst naar output band vanuit Machine ${machine.id}`);
             } else {
-                // Fallback als area niet bestaat
+                // Fallback als zone niet bestaat
                 slotEl.closest('.machine').appendChild(potEl);
             }
 

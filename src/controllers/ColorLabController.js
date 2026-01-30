@@ -13,7 +13,7 @@ export class ColorLabController {
             this.generateGrid();
         });
 
-        // Tab Switching Logic (SPA)
+        // Tab Wissel Logica (SPA)
         document.getElementById('nav-sim').addEventListener('click', () => this.switchTab('sim'));
         document.getElementById('nav-lab').addEventListener('click', () => this.switchTab('lab'));
     }

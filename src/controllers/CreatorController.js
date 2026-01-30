@@ -43,9 +43,9 @@ export class CreatorController {
         // Nieuwe Machine
         document.getElementById('btn-create-mach').addEventListener('click', () => this.createMachine());
 
-        // NIEUW: Color Mode Toggle (Removed in refinement)
+        // NIEUW: Kleurmodus Schakelaar (Verwijderd in verfijning)
         // const colorMode = document.getElementById('new-ing-color-mode');
-        // logic removed.
+        // logica verwijderd.
     }
 
     createIngredient() {
@@ -101,10 +101,16 @@ export class CreatorController {
         const configuredTime = timeInput ? parseInt(timeInput) : null;
 
         // ID Genereren (M1, M2 bestaand -> M3)
-        const id = `M${AppStore.machines.length + 1}`;
+        // Gebruik hoogste ID + 1 in plaats van length, om duplicaten na verwijderen te voorkomen
+        const maxId = AppStore.machines.reduce((max, machine) => {
+            const num = parseInt(machine.id.replace('M', '')) || 0;
+            return num > max ? num : max;
+        }, 0);
+
+        const id = `M${maxId + 1}`;
         const newMachine = new Machine(id, speed, configuredTime);
 
-        // NIEUW: Zet de hal op de huidige actieve hal
+        //Zet de hal op de huidige actieve hal
         newMachine.hall = AppStore.activeHall;
 
         AppStore.machines.push(newMachine);
