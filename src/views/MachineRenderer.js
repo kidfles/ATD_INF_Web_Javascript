@@ -7,8 +7,15 @@ export class MachineRenderer {
         el.dataset.id = machine.id; // Belangrijk voor events
 
         // Header met info
+        // Header met info
         const title = document.createElement('div');
-        title.innerHTML = `<strong>Machine ${machine.id.substr(0, 4)}</strong><br>Snelheid: ${machine.configuredSpeed}`;
+        let info = `<strong>Machine ${machine.id.substr(0, 4)}</strong><br>Snelheid: ${machine.configuredSpeed}`;
+        if (machine.configuredTime) {
+            info += `<br><span style="font-size:0.8em; color:#aaa;">Tijd: ${machine.configuredTime}ms</span>`;
+        } else {
+            info += `<br><span style="font-size:0.8em; color:#aaa;">Tijd: Auto</span>`;
+        }
+        title.innerHTML = info;
         el.appendChild(title);
 
         // [NEW] Delete Button

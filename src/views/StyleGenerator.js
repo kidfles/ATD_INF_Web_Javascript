@@ -32,8 +32,19 @@ export const StyleGenerator = {
                 styles += `
                     border-radius: 10%; /* Bijna vierkant, maar net niet */
                     background-image: radial-gradient(circle, rgba(0,0,0,0.2) 2px, transparent 2.5px);
-                    background-size: 10px 10px; /* Dit herhaalt het patroon */
+                    background-size: 8px 8px; /* Dit herhaalt het patroon */
                     border: 2px dashed rgba(0,0,0,0.3);
+                `;
+                break;
+
+            case 'coarse':
+                // Grove korrel: Grotere stippen, "wilde" border
+                styles += `
+                    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                    background-image: radial-gradient(circle, rgba(0,0,0,0.4) 4px, transparent 5px);
+                    background-size: 15px 15px;
+                    border: 3px dotted rgba(0,0,0,0.5);
+                    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
                 `;
                 break;
 

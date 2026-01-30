@@ -43,8 +43,14 @@ export class MachineController {
 
     startMixingProcess(machine) {
         // 1. Bereken tijd
-        // Basis tijd van pot * Weer modifier
-        const baseTime = machine.currentPot.calculateBaseMixTime();
+        // Gebruik machine tijd indien ingesteld, anders de pot tijd
+        let baseTime = 0;
+        if (machine.configuredTime && machine.configuredTime > 0) {
+            baseTime = machine.configuredTime;
+        } else {
+            baseTime = machine.currentPot.calculateBaseMixTime();
+        }
+
         const finalTime = baseTime * AppStore.weather.timeModifier;
 
         console.log(`Start mixen. Basis: ${baseTime}ms, Weerfactor: ${AppStore.weather.timeModifier}, Totaal: ${finalTime}ms`);

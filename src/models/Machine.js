@@ -1,7 +1,8 @@
 export class Machine {
-    constructor(id, configuredSpeed) {
+    constructor(id, configuredSpeed, configuredTime = null) {
         this.id = id;
         this.configuredSpeed = configuredSpeed; // The speed this machine runs at
+        this.configuredTime = configuredTime;   // Override time (ms) or null
         this.status = 'idle'; // Options: 'idle', 'running', 'done'
         this.currentPot = null;
 

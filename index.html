@@ -49,18 +49,43 @@
                 <div class="creator-card"
                     style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                     <h4>Nieuw Ingrediënt</h4>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <input type="text" id="new-ing-name" placeholder="Naam" style="padding:5px;">
-                        <input type="color" id="new-ing-color" value="#ff0000" style="height:30px;">
-                        <select id="new-ing-struct" style="padding:5px;">
-                            <option value="smooth">Glad</option>
-                            <option value="grainy">Korrelig</option>
-                            <option value="slimy">Slijmerig</option>
-                        </select>
-                        <input type="number" id="new-ing-speed" min="1" max="10" value="5" placeholder="Speed"
-                            style="width:60px; padding:5px;">
-                        <input type="number" id="new-ing-time" min="500" value="2000" placeholder="Time"
-                            style="width:80px; padding:5px;">
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items: flex-end;">
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Naam</label>
+                            <input type="text" id="new-ing-name" placeholder="Naam" style="padding:5px;">
+                        </div>
+
+                        <!-- Kleur (Simpel) -->
+                        <div style="display:flex; flex-direction:column; align-items:center;">
+                            <label style="font-size:0.8rem;">Kleur</label>
+                            <input type="color" id="new-ing-color" value="#ff0000"
+                                style="height:30px; width:40px; padding:0; border:none; cursor:pointer;">
+                        </div>
+
+                        <!-- Structuur -->
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Structuur</label>
+                            <select id="new-ing-struct" style="padding:5px;">
+                                <option value="smooth">Glad</option>
+                                <option value="grainy">Korrel</option>
+                                <option value="coarse">Grove korrel</option>
+                                <option value="slimy">Slijmerig</option>
+                            </select>
+                        </div>
+
+                        <!-- Snelheid -->
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Snelheid</label>
+                            <input type="number" id="new-ing-speed" min="1" max="10" value="5"
+                                style="width:60px; padding:5px;">
+                        </div>
+
+                        <!-- Tijd -->
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Tijd (ms)</label>
+                            <input type="number" id="new-ing-time" min="500" value="2000"
+                                style="width:70px; padding:5px;">
+                        </div>
                     </div>
                     <button id="btn-create-ing" class="btn-create" style="margin-top:10px;">Maak Ingrediënt</button>
                 </div>
@@ -73,10 +98,17 @@
 
                 <div class="creator-card">
                     <h4>Nieuwe Machine</h4>
-                    <div style="margin-bottom:10px;">
-                        <label>Snelheid:</label>
-                        <input type="number" id="new-mach-speed" min="1" max="10" value="5"
-                            style="width:60px; padding:5px;">
+                    <div style="margin-bottom:10px; display:flex; gap:10px;">
+                        <div>
+                            <label>Snelheid:</label>
+                            <input type="number" id="new-mach-speed" min="1" max="10" value="5"
+                                style="width:60px; padding:5px;">
+                        </div>
+                        <div>
+                            <label>Mengtijd (ms):</label>
+                            <input type="number" id="new-mach-time" placeholder="Auto" style="width:80px; padding:5px;"
+                                title="Laat leeg voor automatisch">
+                        </div>
                     </div>
                     <button id="btn-create-mach" class="btn-create">Installeer Machine</button>
                 </div>

@@ -42,12 +42,18 @@ export class CreatorController {
 
         // Nieuwe Machine
         document.getElementById('btn-create-mach').addEventListener('click', () => this.createMachine());
+
+        // NIEUW: Color Mode Toggle (Removed in refinement)
+        // const colorMode = document.getElementById('new-ing-color-mode');
+        // logic removed.
     }
 
     createIngredient() {
         const nameInput = document.getElementById('new-ing-name');
         const name = nameInput.value || "Naamloos";
-        const hexColor = document.getElementById('new-ing-color').value;
+
+        const hexColor = document.getElementById('new-ing-color').value || "#ff0000";
+
         const structure = document.getElementById('new-ing-struct').value;
         const speed = parseInt(document.getElementById('new-ing-speed').value);
         const time = parseInt(document.getElementById('new-ing-time').value);
@@ -91,10 +97,12 @@ export class CreatorController {
 
     createMachine() {
         const speed = parseInt(document.getElementById('new-mach-speed').value);
+        const timeInput = document.getElementById('new-mach-time').value;
+        const configuredTime = timeInput ? parseInt(timeInput) : null;
 
         // ID Genereren (M1, M2 bestaand -> M3)
         const id = `M${AppStore.machines.length + 1}`;
-        const newMachine = new Machine(id, speed);
+        const newMachine = new Machine(id, speed, configuredTime);
 
         // NIEUW: Zet de hal op de huidige actieve hal
         newMachine.hall = AppStore.activeHall;
