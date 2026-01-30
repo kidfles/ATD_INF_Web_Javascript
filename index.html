@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Color Simulation</title>
+    <link rel="stylesheet" href="./src/assets/style.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>Future Color</h1>
+            <nav style="margin-top: 10px;">
+                <button id="nav-sim">Menghal</button>
+                <button id="nav-lab">Kleuren Lab</button>
+                <button id="nav-tools">Tools</button>
+            </nav>
+            <!-- Geconsolideerde Weergave & Bediening van het Weer -->
+            <select id="weather-display" style="margin-left:auto;"></select>
+        </header>
+
+        <main id="simulation-container">
+        </main>
+
+        <main id="color-lab-container" style="display:none;" class="lab-container">
+            <header class="lab-header">
+                <h2>Kwaliteit & Kleur Test</h2>
+                <p class="lab-description">Sleep gemengde verfpotten naar het testgrid om de kwaliteit en kleurbalans te
+                    controleren.</p>
+            </header>
+
+            <div class="lab-layout">
+
+                <div class="lab-section">
+                    <h3>
+                        <span>1. Test Grid</span>
+                    </h3>
+                    <p class="lab-description">Sleep gemengde verfpotten uit het rek hierheen om te testen.</p>
+
+                    <button id="btn-generate-grid">
+                        <span>↺ &nbsp; Reset Grid</span>
+                    </button>
+
+                    <div id="color-grid"></div>
+                </div>
+
+                <div class="lab-section">
+                    <h3>
+                        <span>2. Gemengde Voorraad</span>
+                    </h3>
+                    <p class="lab-description">Hier verschijnen je gemengde potten klaar voor inspectie.</p>
+
+                    <div id="paint-rack">
+                        <p style="color:#94a3b8; font-style:italic; width:100%; text-align:center; padding-top:20px;">
+                            Nog geen verf gemengd...
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <dialog id="color-popup" style="padding: 20px; border-radius: 8px; border: 1px solid #ccc;">
+            <h3 id="popup-title">Kleur Analyse</h3>
+            <div id="popup-swatches" style="display:flex; gap:10px; margin: 20px 0;"></div>
+            <button onclick="document.getElementById('color-popup').close()">Sluiten</button>
+        </dialog>
+
+        <dialog id="creator-modal" class="custom-modal">
+            <div class="modal-header">
+                <h3>Factory Tools</h3>
+                <button id="btn-close-tools" class="close-btn" style="cursor:pointer; font-weight:bold;">X</button>
+            </div>
+
+            <div class="modal-body" style="padding: 20px;">
+                <div class="creator-card"
+                    style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <h4>Nieuw Ingrediënt</h4>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items: flex-end;">
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Naam</label>
+                            <input type="text" id="new-ing-name" placeholder="Naam" style="padding:5px;">
+                        </div>
+
+                        <!-- Kleur (Simpel) -->
+                        <div style="display:flex; flex-direction:column; align-items:center;">
+                            <label style="font-size:0.8rem;">Kleur</label>
+                            <input type="color" id="new-ing-color" value="#ff0000"
+                                style="height:30px; width:40px; padding:0; border:none; cursor:pointer;">
+                        </div>
+
+                        <!-- Structuur -->
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Structuur</label>
+                            <select id="new-ing-struct" style="padding:5px;">
+                                <option value="smooth">Glad</option>
+                                <option value="grainy">Korrel</option>
+                                <option value="coarse">Grove korrel</option>
+                                <option value="slimy">Slijmerig</option>
+                            </select>
+                        </div>
+
+                        <!-- Snelheid -->
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Snelheid</label>
+                            <input type="number" id="new-ing-speed" min="1" max="10" value="5"
+                                style="width:60px; padding:5px;">
+                        </div>
+
+                        <!-- Tijd -->
+                        <div style="display:flex; flex-direction:column;">
+                            <label style="font-size:0.8rem;">Tijd (ms)</label>
+                            <input type="number" id="new-ing-time" min="500" value="2000"
+                                style="width:70px; padding:5px;">
+                        </div>
+                    </div>
+                    <button id="btn-create-ing" class="btn-create" style="margin-top:10px;">Maak Ingrediënt</button>
+                </div>
+
+                <div class="creator-card"
+                    style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <h4>Nieuwe Pot</h4>
+                    <button id="btn-create-pot" class="btn-create">Plaats Lege Pot</button>
+                </div>
+
+                <div class="creator-card">
+                    <h4>Nieuwe Machine</h4>
+                    <div style="margin-bottom:10px; display:flex; gap:10px;">
+                        <div>
+                            <label>Snelheid:</label>
+                            <input type="number" id="new-mach-speed" min="1" max="10" value="5"
+                                style="width:60px; padding:5px;">
+                        </div>
+                        <div>
+                            <label>Mengtijd (ms):</label>
+                            <input type="number" id="new-mach-time" placeholder="Auto" style="width:80px; padding:5px;"
+                                title="Laat leeg voor automatisch">
+                        </div>
+                    </div>
+                    <button id="btn-create-mach" class="btn-create">Installeer Machine</button>
+                </div>
+            </div>
+        </dialog>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>

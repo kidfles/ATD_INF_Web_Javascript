@@ -1,0 +1,82 @@
+import { AppStore } from '../utils/AppStore.js';
+
+export class MachineRenderer {
+    static create(machine) {
+        const el = document.createElement('div');
+        el.className = 'machine';
+        el.dataset.id = machine.id; // Belangrijk voor events
+
+        // Header met info
+        const title = document.createElement('div');
+        let info = `<strong>Machine ${machine.id.substr(0, 4)}</strong><br>Snelheid: ${machine.configuredSpeed}`;
+        if (machine.configuredTime) {
+            info += `<br><span style="font-size:0.8em; color:#aaa;">Tijd: ${machine.configuredTime}ms</span>`;
+        } else {
+            info += `<br><span style="font-size:0.8em; color:#aaa;">Tijd: Auto</span>`;
+        }
+        title.innerHTML = info;
+        el.appendChild(title);
+
+        // Verwijder knop
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '×';
+        delBtn.className = 'btn-delete';
+        delBtn.title = 'Verwijder Machine';
+        delBtn.style.top = '10px';
+        delBtn.style.right = '10px';
+        delBtn.onclick = (e) => {
+            e.stopPropagation();
+
+            // Check status via AppStore voordat we verwijderen
+            // We moeten de machine even ophalen uit de store om de status te checken
+            const currentMachine = AppStore.machines.find(m => m.id === machine.id);
+
+            if (currentMachine && currentMachine.status === 'running') {
+                alert("Je kan een draaiende machine niet verwijderen! Wacht tot hij klaar is.");
+                return;
+            }
+
+            if (confirm(`Verwijder Machine ${machine.id}?`)) {
+                AppStore.removeMachine(machine.id);
+                el.remove();
+            }
+        };
+        el.appendChild(delBtn);
+
+        // Status schermpje
+        const status = document.createElement('div');
+        status.className = 'machine-status';
+        status.innerText = 'STATUS: IDLE';
+        status.id = `status-${machine.id}`;
+        el.appendChild(status);
+
+        // Het slot (Dropzone)
+        const slot = document.createElement('div');
+        slot.className = 'machine-slot';
+        slot.dataset.type = 'machine-slot'; // Voor drag controller
+        slot.dataset.machineId = machine.id;
+        el.appendChild(slot);
+
+        // Start Knop
+        const btn = document.createElement('button');
+        btn.className = 'btn-mix';
+        btn.innerText = 'START MIX';
+        btn.id = `btn-${machine.id}`;
+        // We koppelen de click handler later in de controller
+        el.appendChild(btn);
+
+        return el;
+    }
+
+    static updateStatus(machineId, text, isRunning) {
+        const statusEl = document.getElementById(`status-${machineId}`);
+        const machineEl = document.querySelector(`.machine[data-id="${machineId}"]`);
+
+        if (statusEl) statusEl.innerText = `STATUS: ${text}`;
+
+        if (machineEl) {
+            if (isRunning) machineEl.classList.add('machine-running');
+            else machineEl.classList.remove('machine-running');
+        }
+    }
+}
