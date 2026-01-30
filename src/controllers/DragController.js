@@ -95,6 +95,19 @@ export class DragController {
                 }
             }
         }
+
+        // 3. Check COLOR GRID drops 
+        const gridSquare = e.target.closest('.grid-square');
+        if (gridSquare && this.draggedItem && this.draggedItem.type === 'pot') {
+            const pot = AppStore.getPot(this.draggedItem.id);
+
+            // Alleen gemengde verf mag in het grid
+            if (pot && pot.isMixed) {
+                e.dataTransfer.dropEffect = 'copy';
+                gridSquare.style.borderColor = 'blue'; // Feedback
+                return;
+            }
+        }
     }
 
     handleDragLeave(e) {
@@ -106,6 +119,11 @@ export class DragController {
         const machineSlot = e.target.closest('.machine-slot');
         if (machineSlot) {
             machineSlot.classList.remove('drag-over-valid');
+        }
+
+        const gridSquare = e.target.closest('.grid-square');
+        if (gridSquare) {
+            gridSquare.style.borderColor = '#ccc'; // Reset
         }
     }
 
@@ -132,6 +150,29 @@ export class DragController {
         if (machineSlot && this.draggedItem && this.draggedItem.type === 'pot') {
             machineSlot.classList.remove('drag-over-valid');
             this.processMachineDrop(machineSlot.dataset.machineId, this.draggedItem.id);
+            this.draggedItem = null;
+            return;
+        }
+
+        // 3. Check COLOR GRID drops (Nieuw)
+        const gridSquare = e.target.closest('.grid-square');
+        if (gridSquare && this.draggedItem && this.draggedItem.type === 'pot') {
+            const pot = AppStore.getPot(this.draggedItem.id);
+
+            if (pot && pot.isMixed) {
+                // Reset border
+                gridSquare.style.borderColor = '#ccc';
+
+                // VERF HET VAKJE!
+                const color = pot.finalColor;
+                gridSquare.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+                gridSquare.classList.remove('empty');
+
+                // Sla de hue op voor de click-popup
+                gridSquare.dataset.hue = color.h;
+
+                console.log("Vakje geverfd met hue:", color.h);
+            }
             this.draggedItem = null;
             return;
         }

@@ -1,21 +1,29 @@
 import { ColorMath } from '../utils/ColorMath.js';
 import { AppStore } from '../utils/AppStore.js';
+import { PotRenderer } from '../views/PotRenderer.js'; // Importeer de renderer
 
 export class ColorLabController {
     constructor() {
         this.gridContainer = document.getElementById('color-grid');
+        this.paintRack = document.getElementById('paint-rack'); // NIEUW
         this.popup = document.getElementById('color-popup');
         this.initListeners();
     }
 
     initListeners() {
         document.getElementById('btn-generate-grid').addEventListener('click', () => {
-            this.generateGrid();
+            this.generateEmptyGrid();
         });
 
         // Tab Wissel Logica (SPA)
         document.getElementById('nav-sim').addEventListener('click', () => this.switchTab('sim'));
-        document.getElementById('nav-lab').addEventListener('click', () => this.switchTab('lab'));
+
+        // Als we naar Lab gaan, verversen we de data!
+        document.getElementById('nav-lab').addEventListener('click', () => {
+            this.switchTab('lab');
+            this.loadMixedPots();     // Laad potten
+            if (this.gridContainer.children.length === 0) this.generateEmptyGrid(); // Maak grid als die leeg is
+        });
     }
 
     switchTab(tabName) {
@@ -31,38 +39,51 @@ export class ColorLabController {
         }
     }
 
-    generateGrid() {
-        this.gridContainer.innerHTML = ''; // Reset
+    // Maak witte lege vakjes die dropzones zijn
+    generateEmptyGrid() {
+        this.gridContainer.innerHTML = '';
 
-        // Check of we gemengde potten hebben om het grid mee te vullen
-        const mixedPots = AppStore.pots.filter(p => p.isMixed);
-
-        // 6x6 Grid = 36 vakjes
         for (let i = 0; i < 36; i++) {
             const square = document.createElement('div');
-            square.classList.add('color-grid-square');
+            square.className = 'color-grid-square empty'; // Voor styling & selectie
+            square.classList.add('grid-square'); // Voor JS selectie in DragController
 
-            // Als we gemengde verf hebben, gebruik die. Anders random/grijs.
-            // Voor de demo vullen we ze random of met de laatst gemengde pot
-            if (mixedPots.length > 0) {
-                // Pak een random pot uit de gemengde voorraad
-                const randomPot = mixedPots[Math.floor(Math.random() * mixedPots.length)];
+            // Maak het een dropzone
+            square.dataset.type = 'grid-square';
 
-                // Simpele mix logica: pak hue van eerste ingrediënt (in het echt moet je mixen)
-                const hue = randomPot.finalColor ? randomPot.finalColor.h : randomPot.ingredients[0].color.h;
-
-                square.style.backgroundColor = `hsl(${hue}, 100%, 50%)`;
-                square.dataset.hue = hue;
-
-                // Click Event voor Triadic Popup
-                square.addEventListener('click', () => this.showAnalysis(hue));
-            } else {
-                square.classList.add('empty');
-                square.title = "Meng eerst verf om dit te vullen!";
-            }
+            // Klikken werkt nog steeds (als er kleur in zit)
+            square.addEventListener('click', () => {
+                if (square.dataset.hue) {
+                    this.showAnalysis(square.dataset.hue);
+                }
+            });
 
             this.gridContainer.appendChild(square);
         }
+    }
+
+    // Toon gemengde potten in het rek
+    loadMixedPots() {
+        this.paintRack.innerHTML = '';
+        const mixedPots = AppStore.pots.filter(p => p.isMixed);
+
+        if (mixedPots.length === 0) {
+            this.paintRack.innerHTML = '<p style="color:#888;">Meng eerst verf in de machines!</p>';
+            return;
+        }
+
+        mixedPots.forEach(pot => {
+            // We gebruiken de bestaande PotRenderer, maar we clonen hem visueel
+            // Of we maken gewoon een nieuwe render aan.
+            const el = PotRenderer.create(pot);
+            PotRenderer.update(el, pot); // Zorg dat hij de kleur heeft
+
+            // Styling aanpassen voor in het rek (iets kleiner)
+            el.style.transform = "scale(0.8)";
+            el.style.margin = "-10px"; // Compensate scale
+
+            this.paintRack.appendChild(el);
+        });
     }
 
     showAnalysis(hue) {

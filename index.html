@@ -26,11 +26,26 @@
 
         <main id="color-lab-container" style="display:none; padding: 20px;">
             <h2>Kwaliteit & Kleur Test</h2>
-            <div style="margin-bottom: 20px;">
-                <p>Klik op een vierkant om de Triadic kleuren te zien.</p>
-                <button id="btn-generate-grid">Genereer 6x6 Grid</button>
+
+            <div style="display:flex; gap:40px; align-items:flex-start;">
+
+                <div>
+                    <h3>1. Het Test Grid</h3>
+                    <p>Sleep verfpotten hierheen.</p>
+                    <button id="btn-generate-grid">Reset Grid (Leegmaken)</button>
+                    <div id="color-grid"
+                        style="display: flex; flex-wrap: wrap; width: 320px; gap: 5px; margin-top:15px;"></div>
+                </div>
+
+                <div>
+                    <h3>2. Gemengde Voorraad</h3>
+                    <div id="paint-rack"
+                        style="display:flex; flex-wrap:wrap; gap:15px; padding:15px; background:#eee; border-radius:12px; width:300px; min-height:100px;">
+                        <p style="color:#888; font-style:italic;">Nog geen verf gemengd...</p>
+                    </div>
+                </div>
+
             </div>
-            <div id="color-grid" style="display: flex; flex-wrap: wrap; width: 320px; gap: 5px;"></div>
         </main>
 
         <dialog id="color-popup" style="padding: 20px; border-radius: 8px; border: 1px solid #ccc;">
