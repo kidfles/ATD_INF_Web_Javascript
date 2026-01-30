@@ -5,7 +5,7 @@ import { PotRenderer } from '../views/PotRenderer.js'; // Importeer de renderer
 export class ColorLabController {
     constructor() {
         this.gridContainer = document.getElementById('color-grid');
-        this.paintRack = document.getElementById('paint-rack'); // NIEUW
+        this.paintRack = document.getElementById('paint-rack');
         this.popup = document.getElementById('color-popup');
         this.initListeners();
     }
