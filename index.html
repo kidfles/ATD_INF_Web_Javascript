@@ -24,24 +24,38 @@
         <main id="simulation-container">
         </main>
 
-        <main id="color-lab-container" style="display:none; padding: 20px;">
-            <h2>Kwaliteit & Kleur Test</h2>
+        <main id="color-lab-container" style="display:none;" class="lab-container">
+            <header class="lab-header">
+                <h2>Kwaliteit & Kleur Test</h2>
+                <p class="lab-description">Sleep gemengde verfpotten naar het testgrid om de kwaliteit en kleurbalans te
+                    controleren.</p>
+            </header>
 
-            <div style="display:flex; gap:40px; align-items:flex-start;">
+            <div class="lab-layout">
 
-                <div>
-                    <h3>1. Het Test Grid</h3>
-                    <p>Sleep verfpotten hierheen.</p>
-                    <button id="btn-generate-grid">Reset Grid (Leegmaken)</button>
-                    <div id="color-grid"
-                        style="display: flex; flex-wrap: wrap; width: 320px; gap: 5px; margin-top:15px;"></div>
+                <div class="lab-section">
+                    <h3>
+                        <span>1. Test Grid</span>
+                    </h3>
+                    <p class="lab-description">Sleep gemengde verfpotten uit het rek hierheen om te testen.</p>
+
+                    <button id="btn-generate-grid">
+                        <span>↺ &nbsp; Reset Grid</span>
+                    </button>
+
+                    <div id="color-grid"></div>
                 </div>
 
-                <div>
-                    <h3>2. Gemengde Voorraad</h3>
-                    <div id="paint-rack"
-                        style="display:flex; flex-wrap:wrap; gap:15px; padding:15px; background:#eee; border-radius:12px; width:300px; min-height:100px;">
-                        <p style="color:#888; font-style:italic;">Nog geen verf gemengd...</p>
+                <div class="lab-section">
+                    <h3>
+                        <span>2. Gemengde Voorraad</span>
+                    </h3>
+                    <p class="lab-description">Hier verschijnen je gemengde potten klaar voor inspectie.</p>
+
+                    <div id="paint-rack">
+                        <p style="color:#94a3b8; font-style:italic; width:100%; text-align:center; padding-top:20px;">
+                            Nog geen verf gemengd...
+                        </p>
                     </div>
                 </div>
 

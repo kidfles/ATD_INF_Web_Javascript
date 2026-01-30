@@ -68,7 +68,11 @@ export class ColorLabController {
         const mixedPots = AppStore.pots.filter(p => p.isMixed);
 
         if (mixedPots.length === 0) {
-            this.paintRack.innerHTML = '<p style="color:#888;">Meng eerst verf in de machines!</p>';
+            this.paintRack.innerHTML = `
+                <p class="rack-empty-message">
+                    Meng eerst verf om de voorraad te vullen!
+                </p>
+            `;
             return;
         }
 
