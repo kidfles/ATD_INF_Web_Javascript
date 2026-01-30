@@ -17,7 +17,7 @@ export class Machine {
         }
 
         // Validation: Does the machine speed match the pot contents?
-        if (!pot.isEmpty() && pot.ingredients[0].speed !== this.configuredSpeed) {
+        if (!pot.isEmpty() && Number(pot.ingredients[0].speed) !== Number(this.configuredSpeed)) {
             throw new Error(`Machine speed (${this.configuredSpeed}) does not match Ingredient speed.`);
         }
 

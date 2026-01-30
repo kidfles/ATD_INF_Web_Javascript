@@ -164,3 +164,10 @@
     animation-iteration-count: infinite; /* Blijven shaken zolang hij draait */
     background: #442200; /* Beetje kleurverandering */
 }
+
+/* Ingrediënten in de pot worden kleiner EN blokkeren de muis niet */
+.pot .ingredient-item {
+    transform: scale(0.6);
+    margin: -10px;
+    pointer-events: none; /* <--- VOEG DIT TOE: Cruciaal voor pot-dragen! */
+}
