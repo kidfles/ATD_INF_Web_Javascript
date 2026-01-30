@@ -6,7 +6,7 @@ export class IngredientRenderer {
     /**
      * Maakt een HTML element voor een ingrediënt.
      * @param {Ingredient} ingredient - Het data model
-     * @returns {HTMLElement} Een div die we in de DOM kunnen knallen.
+     * @returns {HTMLElement} Een div die we in de DOM kunnen zetten.
      */
     static create(ingredient) {
         // We maken een nieuwe div aan. Geen innerHTML string gebruiken,
@@ -19,7 +19,7 @@ export class IngredientRenderer {
         // Hier gebruiken we onze generator voor de specifieke look
         el.style.cssText = StyleGenerator.getStyle(ingredient.color, ingredient.structure);
 
-        // --- Drag & Drop Voorbereiding ---
+        //Drag & Drop Voorbereiding 
 
         // Zet draggable op true zodat we later kunnen slepen
         el.setAttribute('draggable', 'true');
@@ -32,12 +32,12 @@ export class IngredientRenderer {
         // Eventueel een tooltipje voor de gebruiker
         el.dataset.tooltip = `${ingredient.name} | ${ingredient.baseTime}ms | Speed ${ingredient.speed}`;
 
-        // [NEW] Delete Button
+        //Verwijder knop
         const delBtn = document.createElement('button');
         delBtn.innerHTML = '×';
         delBtn.className = 'btn-delete';
         delBtn.title = 'Verwijder Ingrediënt';
-        delBtn.dataset.id = ingredient.id; // Mark for easy selecting
+        delBtn.dataset.id = ingredient.id; // Markeren voor makkelijke selectie
         delBtn.onclick = (e) => {
             e.stopPropagation(); // Voorkom drag start als je klikt
             if (confirm(`Verwijder ${ingredient.name}?`)) {

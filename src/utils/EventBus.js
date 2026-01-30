@@ -17,5 +17,5 @@ class EventBus {
     }
 }
 
-// Export a single instance (Singleton pattern)
+// Exporteer een enkele instantie 
 export const eventBus = new EventBus();

@@ -16,12 +16,12 @@ export const ColorMath = {
     },
 
     /**
-     * Converts Hex string to HSL object
+     * Converteert Hex string naar HSL object
      * @param {string} H
      * @returns {Object} {h, s, l}
      */
     hexToHSL(H) {
-        // Convert hex to RGB first
+        // Converteer eerst hex naar RGB
         let r = 0, g = 0, b = 0;
         if (H.length == 4) {
             r = "0x" + H[1] + H[1];
@@ -32,7 +32,7 @@ export const ColorMath = {
             g = "0x" + H[3] + H[4];
             b = "0x" + H[5] + H[6];
         }
-        // Then to HSL
+        // Dan naar HSL
         r /= 255;
         g /= 255;
         b /= 255;

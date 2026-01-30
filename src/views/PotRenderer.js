@@ -9,7 +9,7 @@ export class PotRenderer {
         const el = document.createElement('div');
         el.classList.add('pot');
 
-        // --- FIX: MAAK HEM SLEEPBAAR ---
+        // MAAK HEM SLEEPBAAR 
         el.setAttribute('draggable', 'true');
 
         // We koppelen het ID zodat de Controller weet WELKE pot dit is
@@ -23,7 +23,7 @@ export class PotRenderer {
         // pointer-events: none zorgt dat het label het slepen niet blokkeert
         el.appendChild(label);
 
-        // [NEW] Delete Button
+        //Verwijder knop
         const delBtn = document.createElement('button');
         delBtn.innerHTML = '×';
         delBtn.className = 'btn-delete';

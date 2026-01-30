@@ -3,10 +3,10 @@ export const AppStore = {
     pots: [],
     machines: [],
 
-    // NIEUW: We beginnen in Hal 1
+    // We beginnen in Hal 1
     activeHall: 1,
 
-    // NIEUW: Weer status opslaan
+    // Weer status opslaan
     weather: {
         temp: 20,       // Standaard kamertemperatuur
         isRaining: false,
@@ -23,12 +23,9 @@ export const AppStore = {
     getIngredient(id) { return this.ingredients.find(i => i.id === id); },
     getPot(id) { return this.pots.find(p => p.id === id); },
 
-    // NIEUW: Setter voor weer
+    // Setter voor weer
     setWeather(data) {
         // We mergen de nieuwe data met de oude (spread operator)
         this.weather = { ...this.weather, ...data };
-
-        // Even publishen dat er iets veranderd is (handig voor UI updates later)
-        // (Als je EventBus gebruikt, zou je hier eventBus.publish('STATE_CHANGE') doen)
     }
 };
