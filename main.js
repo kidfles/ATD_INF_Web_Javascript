@@ -10,7 +10,10 @@ import { WeatherController } from './src/controllers/WeatherController.js';
 import { Machine } from './src/models/Machine.js';
 import { MachineRenderer } from './src/views/MachineRenderer.js';
 import { MachineController } from './src/controllers/MachineController.js';
+
+
 import { ColorLabController } from './src/controllers/ColorLabController.js';
+import { CreatorController } from './src/controllers/CreatorController.js';
 
 // 1. Global Error Handler (The "Craft")
 window.addEventListener('unhandledrejection', (event) => {
@@ -100,6 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // START COLOR LAB
     new ColorLabController();
+
+    // Start Factory Tools
+    new CreatorController();
 
     console.log("Drag & Drop systeem actief. Probeer items in de potten te slepen!");
 });
