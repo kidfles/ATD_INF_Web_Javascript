@@ -4,6 +4,9 @@ export class Machine {
         this.configuredSpeed = configuredSpeed; // The speed this machine runs at
         this.status = 'idle'; // Options: 'idle', 'running', 'done'
         this.currentPot = null;
+
+        // NIEUW: default hal is 1
+        this.hall = 1;
     }
 
     /**

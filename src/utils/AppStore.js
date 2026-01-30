@@ -3,6 +3,9 @@ export const AppStore = {
     pots: [],
     machines: [],
 
+    // NIEUW: We beginnen in Hal 1
+    activeHall: 1,
+
     // NIEUW: Weer status opslaan
     weather: {
         temp: 20,       // Standaard kamertemperatuur

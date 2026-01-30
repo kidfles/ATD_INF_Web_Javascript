@@ -96,12 +96,21 @@ export class CreatorController {
         const id = `M${AppStore.machines.length + 1}`;
         const newMachine = new Machine(id, speed);
 
+        // NIEUW: Zet de hal op de huidige actieve hal
+        newMachine.hall = AppStore.activeHall;
+
         AppStore.machines.push(newMachine);
 
         // Renderen in de workstation
         const machineRow = document.querySelector('.machine-row');
         if (machineRow) {
-            machineRow.appendChild(MachineRenderer.create(newMachine));
+            const el = MachineRenderer.create(newMachine);
+            machineRow.appendChild(el);
+
+            // Check direct of hij zichtbaar moet zijn
+            if (newMachine.hall !== AppStore.activeHall) {
+                el.style.display = 'none';
+            }
         }
 
         this.dialog.close();

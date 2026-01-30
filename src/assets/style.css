@@ -457,3 +457,29 @@ dialog::backdrop {
     top: -10px;
     /* Slight animation pop */
 }
+
+/* --- Hall Switcher Styles --- */
+.hall-nav {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.hall-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    color: #666;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.hall-btn.active {
+    background: #2c3e50;
+    color: white;
+}
