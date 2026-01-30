@@ -1,17 +1,14 @@
-import { AppStore } from '../utils/AppStore.js'; // Die maken we hierna even snel
+import { AppStore } from '../utils/AppStore.js';
 import { PotRenderer } from '../views/PotRenderer.js';
 
 export class DragController {
     constructor() {
-        this.draggedItem = null; // Even onthouden wat we vast hebben
+        this.draggedItem = null;
         this.init();
     }
 
     init() {
-        console.log("DragController luistert...");
-
-        // Event Delegation: We luisteren op de hele body, ipv elk element apart.
-        // Dat is beter voor performance en werkt ook met dynamische elementen.
+        console.log("DragController is actief...");
 
         document.addEventListener('dragstart', (e) => this.handleDragStart(e));
         document.addEventListener('dragover', (e) => this.handleDragOver(e));
@@ -20,61 +17,77 @@ export class DragController {
     }
 
     handleDragStart(e) {
-        // Check of we wel iets slepen wat mag (bijv. een ingrediënt)
-        if (!e.target.dataset.type) return;
+        // FIX: Gebruik closest om zeker te zijn dat we het draggable element hebben
+        // (ook al klik je op een randje of child element)
+        const target = e.target.closest('[draggable="true"]');
+
+        if (!target || !target.dataset.type) return;
+
+        console.log("Drag gestart:", target.dataset.type, target.dataset.id);
 
         this.draggedItem = {
-            id: e.target.dataset.id,
-            type: e.target.dataset.type,
-            // Trucje: Als we de speed al in de dataset zetten, hoeven we 
-            // niet in de database te zoeken tijdens het slepen (performance!)
-            // Voor nu halen we het even uit het Model via de AppStore (netter).
+            id: target.dataset.id,
+            type: target.dataset.type,
         };
 
-        // DataTransfer is nodig voor de browser om data mee te sturen
         e.dataTransfer.setData('text/plain', JSON.stringify(this.draggedItem));
-        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.effectAllowed = 'copy'; // 'copy' is vaak veiliger dan 'move' voor visual feedback
 
-        // Beetje transparant maken zodat je ziet dat je sleept
-        e.target.style.opacity = '0.5';
+        // FIX: Doe visuele aanpassingen in een timeout.
+        // Directe DOM aanpassingen tijdens dragstart kunnen de drag annuleren in sommige browsers.
+        setTimeout(() => {
+            target.style.opacity = '0.5';
+        }, 0);
     }
 
     handleDragOver(e) {
-        e.preventDefault(); // SUPER BELANGRIJK! Zonder dit vuurt 'drop' nooit.
+        e.preventDefault(); // Cruciaal!
 
         const dropZone = e.target.closest('.pot');
+
+        // Als we niet boven een pot hangen, of we slepen niks, stop dan.
         if (!dropZone || !this.draggedItem) return;
 
-        // Validatie Logica: Mag dit ingrediënt in deze pot?
         const potId = dropZone.dataset.id;
+
+        // Haal data op uit de store
         const potModel = AppStore.getPot(potId);
         const ingredientModel = AppStore.getIngredient(this.draggedItem.id);
 
-        if (!potModel || !ingredientModel) return;
+        // DEBUG: Als dit faalt, zien we het in de console
+        if (!potModel) {
+            console.warn("Pot model niet gevonden in AppStore:", potId);
+            return;
+        }
+        if (!ingredientModel) {
+            console.warn("Ingrediënt model niet gevonden in AppStore:", this.draggedItem.id);
+            return;
+        }
 
-        // Check: Is de pot leeg OF is de snelheid gelijk?
+        // Check regels: Pot leeg? OF Snelheid gelijk?
         let isValid = false;
         if (potModel.isEmpty()) {
             isValid = true;
         } else {
-            // Checken of de speeds matchen
             isValid = potModel.ingredients[0].speed === ingredientModel.speed;
+            if (!isValid) {
+                // Console log om te zien waarom het niet mag (handig voor dev)
+                // console.log(`Speed mismatch: Pot=${potModel.ingredients[0].speed} vs Item=${ingredientModel.speed}`);
+            }
         }
 
-        // Visuele feedback geven
         if (isValid) {
             e.dataTransfer.dropEffect = 'copy';
             dropZone.classList.add('drag-over-valid');
             dropZone.classList.remove('drag-over-invalid');
         } else {
-            e.dataTransfer.dropEffect = 'none'; // Cursor wordt een 'verboden' bordje
+            e.dataTransfer.dropEffect = 'none';
             dropZone.classList.add('drag-over-invalid');
             dropZone.classList.remove('drag-over-valid');
         }
     }
 
     handleDragLeave(e) {
-        // Als we de pot verlaten, haal dan die groene/rode gloed weg
         const dropZone = e.target.closest('.pot');
         if (dropZone) {
             dropZone.classList.remove('drag-over-valid', 'drag-over-invalid');
@@ -82,53 +95,50 @@ export class DragController {
     }
 
     handleDrop(e) {
-        e.preventDefault(); // Voorkom dat de browser de image/text opent
+        e.preventDefault();
 
-        // Reset de opacity van het gesleepte ding
-        const draggedEl = document.querySelector(`[data-id="${this.draggedItem.id}"]`);
-        if (draggedEl) draggedEl.style.opacity = '1';
+        // Reset de opacity (zoek het element via ID omdat 'target' hier de pot is)
+        if (this.draggedItem) {
+            const originalEl = document.querySelector(`[data-id="${this.draggedItem.id}"]`);
+            if (originalEl) originalEl.style.opacity = '1';
+        }
 
         const dropZone = e.target.closest('.pot');
-
-        // Schoonmaak: haal classes weg
         if (dropZone) dropZone.classList.remove('drag-over-valid', 'drag-over-invalid');
 
         if (!dropZone || !this.draggedItem) return;
 
-        // De daadwerkelijke actie uitvoeren
         this.processDrop(dropZone.dataset.id, this.draggedItem.id);
-
         this.draggedItem = null; // Reset
     }
 
     processDrop(potId, ingredientId) {
-        // Haal de echte objecten op
         const pot = AppStore.getPot(potId);
         const ingredient = AppStore.getIngredient(ingredientId);
 
+        if (!pot || !ingredient) return;
+
         try {
-            // 1. Update het Model (Data)
-            pot.addIngredient(ingredient); // Dit gooit een error als het niet mag!
-            console.log(`Ingrediënt ${ingredient.name} toegevoegd aan pot!`);
+            // 1. Update Model
+            pot.addIngredient(ingredient);
+            console.log("Ingrediënt toegevoegd!", pot);
 
-            // 2. Update de View (DOM)
-            // Zoek het HTML element van de pot
+            // 2. Update View
             const potEl = document.querySelector(`.pot[data-id="${potId}"]`);
-
-            // We verplaatsen het ingrediënt visueel IN de pot
-            // (Clone node is vaak makkelijker dan verplaatsen als je het origineel wilt houden, 
-            // maar voor deze opdracht verplaatsen we hem waarschijnlijk).
             const ingredientEl = document.querySelector(`[data-id="${ingredientId}"]`);
 
             if (ingredientEl && potEl) {
-                // Verplaats de div fysiek in de DOM
+                // Verplaats het element de pot in
                 potEl.appendChild(ingredientEl);
-                PotRenderer.update(potEl, pot); // Update labeltjes
+                // Reset styling omdat hij nu in de pot zit (optioneel)
+                ingredientEl.style.position = 'relative';
+                ingredientEl.style.opacity = '1';
+
+                PotRenderer.update(potEl, pot);
             }
 
         } catch (error) {
-            // Hier vangen we die validatie error van Block 2 op!
-            alert(error.message); // Of een mooiere toaster
+            alert(error.message);
         }
     }
 }
