@@ -171,3 +171,58 @@
     margin: -10px;
     pointer-events: none; /* <--- VOEG DIT TOE: Cruciaal voor pot-dragen! */
 }
+
+/* --- Ingredient Styles Update --- */
+.ingredient-item {
+    width: 60px;
+    height: 60px;
+    cursor: grab;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy effect */
+    position: relative; /* Nodig voor de tooltip positionering */
+    display: inline-block;
+}
+
+/* De Custom Tooltip */
+.ingredient-item::after {
+    content: attr(data-tooltip); /* We halen de tekst uit een attribuut */
+    position: absolute;
+    bottom: 110%; /* Boven het item */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
+}
+
+/* Pijltje onder de tooltip */
+.ingredient-item::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+/* Laat zien bij hover */
+.ingredient-item:hover::after,
+.ingredient-item:hover::before {
+    opacity: 1;
+}
+
+.ingredient-item:hover {
+    transform: scale(1.15) rotate(5deg);
+    z-index: 10;
+}
