@@ -23,7 +23,7 @@ export class ColorLabController {
         const lab = document.getElementById('color-lab-container');
 
         if (tabName === 'sim') {
-            sim.style.display = 'block';
+            sim.style.display = 'grid';
             lab.style.display = 'none';
         } else {
             sim.style.display = 'none';
