@@ -52,7 +52,7 @@ export class ColorLabController {
                 const randomPot = mixedPots[Math.floor(Math.random() * mixedPots.length)];
 
                 // Simpele mix logica: pak hue van eerste ingrediënt (in het echt moet je mixen)
-                const hue = randomPot.ingredients[0].color.h;
+                const hue = randomPot.finalColor ? randomPot.finalColor.h : randomPot.ingredients[0].color.h;
 
                 square.style.backgroundColor = `hsl(${hue}, 100%, 50%)`;
                 square.dataset.hue = hue;
