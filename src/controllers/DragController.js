@@ -82,7 +82,11 @@ export class DragController {
 
             // Logic: Is Machine Empty? Is Pot not Empty? Speeds match?
             if (machine && pot && !pot.isEmpty()) {
-                if (machine.configuredSpeed === pot.ingredients[0].speed) {
+                const machineSpeed = Number(machine.configuredSpeed);
+                const potSpeed = Number(pot.ingredients[0].speed);
+                console.log(`Checking machine drop: MachineSpeed=${machineSpeed} (type: ${typeof machineSpeed}), PotSpeed=${potSpeed} (type: ${typeof potSpeed})`);
+
+                if (machineSpeed === potSpeed) {
                     machineSlot.classList.add('drag-over-valid');
                     e.dataTransfer.dropEffect = 'copy';
                     return;
@@ -136,11 +140,14 @@ export class DragController {
     processMachineDrop(machineId, potId) {
         // We verplaatsen de pot DOM naar het slot
         const potEl = document.querySelector(`.pot[data-id="${potId}"]`);
-        const slotEl = document.querySelector(`.machine-slot[data-machineId="${machineId}"]`);
+        const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machineId}"]`) || document.querySelector(`.machine-slot[data-machineId="${machineId}"]`);
 
         if (potEl && slotEl) {
+            console.log(`Processing drop for Pot ${potId} into Machine ${machineId}`);
+
             // Check even of er al niet iets staat
             if (slotEl.children.length > 0) {
+                console.warn("Slot is niet leeg!", slotEl.children);
                 alert("Er staat al een pot in deze machine!");
                 return;
             }
