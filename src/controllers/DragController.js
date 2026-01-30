@@ -152,6 +152,9 @@ export class DragController {
                 return;
             }
 
+            // Store original parent before moving to enable correct rollback
+            const originalParent = potEl.parentElement;
+
             // Verplaats fysiek
             slotEl.appendChild(potEl);
 
@@ -164,8 +167,13 @@ export class DragController {
                 console.log(`Pot geladen in machine ${machineId}`);
             } catch (e) {
                 alert(e.message);
-                // Zet pot terug (zou eigenlijk in de catch moeten)
-                document.querySelector('.pot-container').appendChild(potEl);
+                // Zet pot terug naar waar hij vandaan kwam (rollback)
+                if (originalParent) {
+                    originalParent.appendChild(potEl);
+                } else {
+                    // Fallback als parent weg is (zou niet mogen gebeuren)
+                    document.querySelector('.pot-container').appendChild(potEl);
+                }
             }
         }
     }

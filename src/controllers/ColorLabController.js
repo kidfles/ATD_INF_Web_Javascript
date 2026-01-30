@@ -83,9 +83,16 @@ export class ColorLabController {
             div.style.backgroundColor = `hsl(${col.h}, ${col.s}%, ${col.l}%)`;
             div.style.borderRadius = '50%';
             div.style.marginBottom = '5px';
+            div.style.border = '2px solid #fff';
+            div.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
 
             const info = document.createElement('div');
-            info.innerText = index === 0 ? "Basis" : "Triadic";
+            info.innerHTML = `
+                <strong>${index === 0 ? "Basis" : "Triadic"}</strong><br>
+                <span style="font-size:10px; color:#666;">
+                    HSL(${col.h}, ${col.s}%, ${col.l}%)
+                </span>
+            `;
             info.style.fontSize = '12px';
 
             wrapper.appendChild(div);
