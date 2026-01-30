@@ -32,8 +32,8 @@ body {
 header {
     background: var(--card-bg);
     padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
@@ -45,6 +45,7 @@ header h1 {
     font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: -0.025em;
+    justify-self: start;
 }
 
 nav {
@@ -70,12 +71,31 @@ nav button:hover {
 }
 
 #weather-display {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #64748b;
-    background: #f1f5f9;
-    padding: 4px 12px;
+    color: #475569;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    padding: 6px 12px;
     border-radius: 20px;
+    outline: none;
+    text-align: center;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+#weather-display:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+#weather-display:focus {
+    box-shadow: 0 0 0 2px #bae6fd;
+    border-color: #0ea5e9;
 }
 
 /* --- Main Layout (Grid) --- */

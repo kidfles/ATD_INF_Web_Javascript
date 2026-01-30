@@ -6,68 +6,74 @@ export class WeatherController {
     constructor() {
         this.displayElement = document.getElementById('weather-display');
 
-        // Standaard locatie: Utrecht 
-        this.location = { lat: 52.09, lon: 5.12, name: 'Utrecht' };
+        // Initialiseer Dropdown Options
+        if (this.displayElement) {
+            this.displayElement.innerHTML = `
+                <option value="realtime">Live: Den Bosch (Laden...)</option>
+                <option value="normal">Simulatie: Normaal (20°C)</option>
+                <option value="cold">Simulatie: Koud (5°C)</option>
+                <option value="hot">Simulatie: Hittegolf (38°C)</option>
+            `;
+
+            // Listen for changes
+            this.displayElement.addEventListener('change', (e) => this.manualOverride(e.target.value));
+        }
+
+        // Standaard locatie: 's-Hertogenbosch
+        this.location = { lat: 51.69, lon: 5.30, name: "'s-Hertogenbosch" };
     }
 
     async init() {
-        this.updateDisplay("Weer ophalen...");
+        // Start met realtime
+        this.manualOverride('realtime');
+    }
 
-        try {
-            // 1. Data ophalen (Async!)
-            // We wachten hier even 'nep' 1 seconde extra zodat je de laad-animatie ziet (optioneel)
-            const rawData = await WeatherService.fetchCurrentWeather(this.location.lat, this.location.lon);
-
-            // 2. Business Logica toepassen (De regels uit de opdracht)
-            this.processWeatherData(rawData);
-
-        } catch (error) {
-            // 3. Error Handling (De "Craft")
-            // Als de API stuk is, crasht de app NIET. We gaan over op 'Noodprotocol'.
-            console.error("Weather Controller Error:", error);
-
-            this.updateDisplay("Weer data onbeschikbaar. Standaard instellingen actief.");
-
-            // Zet veilige defaults in de store
-            AppStore.setWeather({
-                temp: 20,
-                isRaining: false,
-                timeModifier: 1.0,
-                heatWave: false
-            });
-
-            // Gooi de error nog even door naar de global handler voor de toaster/alert
-            throw error;
+    async manualOverride(mode) {
+        if (mode === 'realtime') {
+            try {
+                this.updateDisplay("Laden...");
+                this.location.name = "'s-Hertogenbosch";
+                const rawData = await WeatherService.fetchCurrentWeather(51.69, 5.30);
+                this.processWeatherData(rawData);
+            } catch (error) {
+                console.error("Live fetch failed:", error);
+                this.processWeatherData({ temperature: 20, weathercode: 3 });
+                this.updateDisplay("Fout! (20°C)");
+            }
+            return;
         }
+
+        let mockData = { weathercode: 3 };
+
+        switch (mode) {
+            case 'cold':
+                mockData.temperature = 5;
+                this.location.name = 'Simulatie: Koud';
+                break;
+            case 'hot':
+                mockData.temperature = 38;
+                this.location.name = 'Simulatie: Hittegolf';
+                break;
+            case 'normal':
+                mockData.temperature = 20;
+                this.location.name = 'Simulatie: Normaal';
+                break;
+            default:
+                return;
+        }
+        this.processWeatherData(mockData);
     }
 
     processWeatherData(data) {
         const temp = data.temperature;
-        // WMO code: 51, 53, 55, 61, 63, 65, 80, 81, 82 zijn regen. 71+ is sneeuw.
-        // Voor simpelheid: als code > 50 is het nat.
         const isRaining = data.weathercode > 50;
-
         let modifier = 1.0;
         let heatWave = false;
 
-        // REGEL 1: Regen/Sneeuw -> 10% trager
-        if (isRaining) {
-            modifier += 0.10;
-        }
+        if (isRaining) modifier += 0.10;
+        if (temp < 10) modifier += 0.15;
+        if (temp > 35) heatWave = true;
 
-        // REGEL 2: Koud (< 10 graden) -> 15% trager
-        // Let op: modifiers stapelen? De opdracht zegt het niet specifiek.
-        // Laten we ze optellen voor de zekerheid (dus 1.0 + 0.10 + 0.15 = 1.25)
-        if (temp < 10) {
-            modifier += 0.15;
-        }
-
-        // REGEL 3: Hittegolf (> 35 graden)
-        if (temp > 35) {
-            heatWave = true;
-        }
-
-        // Opslaan in de store
         AppStore.setWeather({
             temp: temp,
             isRaining: isRaining,
@@ -75,7 +81,6 @@ export class WeatherController {
             heatWave: heatWave
         });
 
-        // UI Updaten
         this.renderUI(temp, isRaining, modifier);
     }
 
@@ -86,22 +91,23 @@ export class WeatherController {
         if (isRaining) statusText += " (Regen)";
         if (temp > 35) statusText += " (Hittegolf)";
         if (temp < 10) statusText += " (Koud)";
-
-        if (percentage > 0) {
-            statusText += ` (Mengtijd +${percentage}%)`;
-        }
+        if (percentage > 0) statusText += ` (+${percentage}%)`;
 
         this.updateDisplay(statusText);
 
-        // Visuele feedback: verander header kleur op basis van temp
         const header = document.querySelector('header');
-        if (temp > 30) header.style.backgroundColor = '#ffcc80'; // Oranje
-        else if (temp < 10) header.style.backgroundColor = '#90caf9'; // Blauw
+        if (temp > 30) header.style.backgroundColor = '#ffcc80';
+        else if (temp < 10) header.style.backgroundColor = '#90caf9';
+        else header.style.backgroundColor = '#ffffff';
     }
 
     updateDisplay(text) {
         if (this.displayElement) {
-            this.displayElement.innerText = text;
+            // Update de tekst van de GESELECTEERDE optie
+            const selectedOption = this.displayElement.options[this.displayElement.selectedIndex];
+            if (selectedOption) {
+                selectedOption.text = text;
+            }
         }
     }
 }
