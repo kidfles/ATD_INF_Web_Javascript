@@ -6,6 +6,7 @@ import { AppStore } from './src/utils/AppStore.js';
 import { IngredientRenderer } from './src/views/IngredientRenderer.js';
 import { PotRenderer } from './src/views/PotRenderer.js';
 import { DragController } from './src/controllers/DragController.js';
+import { WeatherController } from './src/controllers/WeatherController.js';
 
 // 1. Global Error Handler (The "Craft")
 window.addEventListener('unhandledrejection', (event) => {
@@ -20,6 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Start de DragController
     new DragController();
+
+    // 1b. Start Weather Controller
+    const weatherApp = new WeatherController();
+    weatherApp.init();
 
     const container = document.getElementById('simulation-container');
 
