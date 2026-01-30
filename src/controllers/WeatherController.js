@@ -13,6 +13,7 @@ export class WeatherController {
                 <option value="normal">Simulatie: Normaal (20°C)</option>
                 <option value="cold">Simulatie: Koud (5°C)</option>
                 <option value="hot">Simulatie: Hittegolf (38°C)</option>
+                <option value="rain">Simulatie: Regen (15°C)</option>
             `;
 
             // Listen for changes
@@ -57,6 +58,11 @@ export class WeatherController {
             case 'normal':
                 mockData.temperature = 20;
                 this.location.name = 'Simulatie: Normaal';
+                break;
+            case 'rain':
+                mockData.temperature = 15;
+                mockData.weathercode = 63; // Rain
+                this.location.name = 'Simulatie: Regen';
                 break;
             default:
                 return;
