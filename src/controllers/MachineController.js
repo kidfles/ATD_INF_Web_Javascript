@@ -60,7 +60,7 @@ export class MachineController {
 
         // 4. Verplaats pot naar de "Andere Kant" (Output)
         // We simuleren dit door hem uit het slot te halen en ernaast te zetten
-        const slotEl = document.querySelector(`.machine-slot[data-machineId="${machine.id}"]`);
+        const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machine.id}"]`) || document.querySelector(`.machine-slot[data-machineId="${machine.id}"]`);
         const potEl = slotEl.querySelector('.pot');
 
         if (potEl) {
