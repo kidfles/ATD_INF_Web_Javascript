@@ -95,7 +95,7 @@ nav button:hover {
 .ingredient-shelf {
     background: var(--card-bg);
     border-radius: var(--border-radius);
-    padding: 15px 20px;
+    padding: 25px 60px;
     box-shadow: var(--shadow-soft);
     display: flex;
     align-items: center;
@@ -175,7 +175,7 @@ nav button:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 0px;
     border: 1px solid #e5e7eb;
     position: relative;
     /* Optional: Industrial floor pattern */
