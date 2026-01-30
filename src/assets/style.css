@@ -193,7 +193,7 @@ nav button:hover {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 0px;
     border: 1px solid #e5e7eb;
