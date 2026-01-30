@@ -17,8 +17,6 @@ export class DragController {
     }
 
     handleDragStart(e) {
-        // FIX: Gebruik closest om zeker te zijn dat we het draggable element hebben
-        // (ook al klik je op een randje of child element)
         const target = e.target.closest('[draggable="true"]');
 
         if (!target || !target.dataset.type) return;
@@ -31,10 +29,7 @@ export class DragController {
         };
 
         e.dataTransfer.setData('text/plain', JSON.stringify(this.draggedItem));
-        e.dataTransfer.effectAllowed = 'copy'; // 'copy' is vaak veiliger dan 'move' voor visual feedback
-
-        // FIX: Doe visuele aanpassingen in een timeout.
-        // Directe DOM aanpassingen tijdens dragstart kunnen de drag annuleren in sommige browsers.
+        e.dataTransfer.effectAllowed = 'copy';
         setTimeout(() => {
             target.style.opacity = '0.5';
         }, 0);
@@ -43,7 +38,7 @@ export class DragController {
     handleDragOver(e) {
         e.preventDefault();
 
-        // 1. Check POT drops (Only if we are dragging an INGREDIENT)
+        // 1. Check POT drops (Alleen als we een INGREDIËNT slepen)
         if (this.draggedItem && this.draggedItem.type === 'ingredient') {
             const potDropZone = e.target.closest('.pot');
             if (potDropZone) {
@@ -68,23 +63,30 @@ export class DragController {
                         potDropZone.classList.add('drag-over-invalid');
                         potDropZone.classList.remove('drag-over-valid');
                     }
-                    return; // Stop here if we found a pot
+                    return; // Stop hier als we een pot vonden
                 }
             }
         }
 
-        // 2. Check MACHINE drops (Only if we are dragging a POT)
+        // 2. Check MACHINE drops (Alleen als we een POT slepen)
         const machineSlot = e.target.closest('.machine-slot');
         if (machineSlot && this.draggedItem && this.draggedItem.type === 'pot') {
             const machineId = machineSlot.dataset.machineId;
             const machine = AppStore.machines.find(m => m.id === machineId);
             const pot = AppStore.getPot(this.draggedItem.id);
 
-            // Logic: Is Machine Empty? Is Pot not Empty? Speeds match?
-            if (machine && pot && !pot.isEmpty()) {
+            // Logica: Is Machine Leeg? Is Pot? Matchen snelheden?
+            if (machine && pot) {
+                //Sta lege potten toe om te 'hoveren' als geldig, zodat we kunnen falen met een alert bij drop
+                if (pot.isEmpty()) {
+                    machineSlot.classList.add('drag-over-valid');
+                    e.dataTransfer.dropEffect = 'copy';
+                    return;
+                }
+
+                // Normale check voor gevulde potten
                 const machineSpeed = Number(machine.configuredSpeed);
                 const potSpeed = Number(pot.ingredients[0].speed);
-                console.log(`Checking machine drop: MachineSpeed=${machineSpeed} (type: ${typeof machineSpeed}), PotSpeed=${potSpeed} (type: ${typeof potSpeed})`);
 
                 if (machineSpeed === potSpeed) {
                     machineSlot.classList.add('drag-over-valid');
@@ -110,13 +112,13 @@ export class DragController {
     handleDrop(e) {
         e.preventDefault();
 
-        // Reset opacity of dragged item
+        // Reset ondoorzichtigheid van gesleept item
         if (this.draggedItem) {
             const originalEl = document.querySelector(`[data-id="${this.draggedItem.id}"]`);
             if (originalEl) originalEl.style.opacity = '1';
         }
 
-        // 1. Check POT drops (Only if dragging Ingredient)
+        // 1. Check POT drops (Alleen als Ingrediënt wordt gesleept)
         const dropZone = e.target.closest('.pot');
         if (dropZone && this.draggedItem && this.draggedItem.type === 'ingredient') {
             dropZone.classList.remove('drag-over-valid', 'drag-over-invalid');
@@ -125,7 +127,7 @@ export class DragController {
             return;
         }
 
-        // 2. Check MACHINE drops (Only if dragging Pot)
+        // 2. Check MACHINE drops (Alleen als Pot wordt gesleept)
         const machineSlot = e.target.closest('.machine-slot');
         if (machineSlot && this.draggedItem && this.draggedItem.type === 'pot') {
             machineSlot.classList.remove('drag-over-valid');
@@ -152,7 +154,7 @@ export class DragController {
                 return;
             }
 
-            // Store original parent before moving to enable correct rollback
+            // Sla originele parent op voor rollback bij fout
             const originalParent = potEl.parentElement;
 
             // Verplaats fysiek
