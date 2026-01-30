@@ -1,3 +1,5 @@
+import { AppStore } from '../utils/AppStore.js';
+
 export class MachineRenderer {
     static create(machine) {
         const el = document.createElement('div');
@@ -8,6 +10,22 @@ export class MachineRenderer {
         const title = document.createElement('div');
         title.innerHTML = `<strong>Machine ${machine.id.substr(0, 4)}</strong><br>Snelheid: ${machine.configuredSpeed}`;
         el.appendChild(title);
+
+        // [NEW] Delete Button
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '×';
+        delBtn.className = 'btn-delete';
+        delBtn.title = 'Verwijder Machine';
+        delBtn.style.top = '10px';
+        delBtn.style.right = '10px';
+        delBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (confirm(`Verwijder Machine ${machine.id}?`)) {
+                AppStore.removeMachine(machine.id);
+                el.remove();
+            }
+        };
+        el.appendChild(delBtn);
 
         // Status schermpje
         const status = document.createElement('div');

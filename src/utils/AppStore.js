@@ -13,6 +13,9 @@ export const AppStore = {
 
     addIngredient(ing) { this.ingredients.push(ing); },
     addPot(pot) { this.pots.push(pot); },
+    removeIngredient(id) { this.ingredients = this.ingredients.filter(i => i.id !== id); },
+    removePot(id) { this.pots = this.pots.filter(p => p.id !== id); },
+    removeMachine(id) { this.machines = this.machines.filter(m => m.id !== id); },
 
     getIngredient(id) { return this.ingredients.find(i => i.id === id); },
     getPot(id) { return this.pots.find(p => p.id === id); },

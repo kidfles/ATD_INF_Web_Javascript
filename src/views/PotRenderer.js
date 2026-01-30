@@ -1,3 +1,5 @@
+import { AppStore } from '../utils/AppStore.js';
+
 export class PotRenderer {
     /**
      * Maakt een lege pot in de HTML.
@@ -20,6 +22,21 @@ export class PotRenderer {
         label.style.cssText = "position:absolute; top:-20px; font-size:12px; pointer-events: none;";
         // pointer-events: none zorgt dat het label het slepen niet blokkeert
         el.appendChild(label);
+
+        // [NEW] Delete Button
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '×';
+        delBtn.className = 'btn-delete';
+        delBtn.title = 'Verwijder Pot';
+        delBtn.style.right = '-10px'; // Beetje offset voor pot
+        delBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (confirm('Verwijder deze pot?')) {
+                AppStore.removePot(potModel.id);
+                el.remove();
+            }
+        };
+        el.appendChild(delBtn);
 
         return el;
     }

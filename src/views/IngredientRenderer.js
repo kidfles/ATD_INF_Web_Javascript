@@ -1,4 +1,5 @@
 import { StyleGenerator } from './StyleGenerator.js';
+import { AppStore } from '../utils/AppStore.js';
 
 export class IngredientRenderer {
 
@@ -30,6 +31,21 @@ export class IngredientRenderer {
 
         // Eventueel een tooltipje voor de gebruiker
         el.dataset.tooltip = `${ingredient.name} | ${ingredient.baseTime}ms | Speed ${ingredient.speed}`;
+
+        // [NEW] Delete Button
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '×';
+        delBtn.className = 'btn-delete';
+        delBtn.title = 'Verwijder Ingrediënt';
+        delBtn.dataset.id = ingredient.id; // Mark for easy selecting
+        delBtn.onclick = (e) => {
+            e.stopPropagation(); // Voorkom drag start als je klikt
+            if (confirm(`Verwijder ${ingredient.name}?`)) {
+                AppStore.removeIngredient(ingredient.id);
+                el.remove();
+            }
+        };
+        el.appendChild(delBtn);
 
         return el;
     }

@@ -75,15 +75,15 @@ document.addEventListener('DOMContentLoaded', () => {
     machineArea.className = 'machine-row';
     workstation.appendChild(machineArea); // Append to workstation
 
-    // Maak 2 machines: Eentje snel (5), eentje traag (9) ofzo
-    const machine1 = new Machine("M1", 5); // Accepteert alleen ingredients met speed 5
-    const machine2 = new Machine("M2", 5); // Ook speed 5, handig om hittegolf te testen
+    // Maak 1 machine (was 2)
+    const machine1 = new Machine("M1", 5);
+    // const machine2 = new Machine("M2", 5); // Start with only 1 machine
 
-    AppStore.machines.push(machine1, machine2);
+    AppStore.machines.push(machine1);
 
     // Render ze
     // Render ze
-    [machine1, machine2].forEach(m => {
+    [machine1].forEach(m => {
         machineArea.appendChild(MachineRenderer.create(m));
     });
 

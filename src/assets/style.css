@@ -256,6 +256,7 @@ nav button:hover {
     align-items: center;
     box-shadow: var(--shadow-hover);
     border: 1px solid #334155;
+    position: relative;
 }
 
 .machine-status {
@@ -416,4 +417,43 @@ dialog#color-popup {
 dialog::backdrop {
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(4px);
+}
+
+/* --- Delete Button Styles --- */
+.btn-delete {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: #ff4757;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    /* Hidden by default */
+    transition: all 0.2s ease;
+    z-index: 200;
+}
+
+.btn-delete:hover {
+    background: #ff6b81;
+    transform: scale(1.1);
+}
+
+/* Show on hover of parent */
+.ingredient-item:hover .btn-delete,
+.pot:hover .btn-delete,
+.machine:hover .btn-delete {
+    opacity: 1;
+    top: -10px;
+    /* Slight animation pop */
 }
