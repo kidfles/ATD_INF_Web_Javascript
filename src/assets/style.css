@@ -1,158 +1,348 @@
-/* De 'planken' of containers waar ingrediënten liggen */
-.ingredient-shelf {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    padding: 20px;
-    background-color: #f0f0f0;
-    min-height: 100px;
-    border-bottom: 2px solid #ccc;
+:root {
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --primary-color: #2c3e50;
+    --accent-color: #3498db;
+    --success-color: #4CAF50;
+    --error-color: #e74c3c;
+    --border-radius: 12px;
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --font-main: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
-/* Het daadwerkelijke ingrediënt blokje */
+body {
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    height: 100vh;
+    overflow: hidden;
+    /* Prevent full page scroll */
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* --- Header --- */
+header {
+    background: var(--card-bg);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+}
+
+nav button {
+    background: transparent;
+    border: 1px solid #e5e7eb;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+nav button:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: #f0f9ff;
+}
+
+#weather-display {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* --- Main Layout (Grid) --- */
+#simulation-container {
+    flex-grow: 1;
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    gap: 20px;
+    padding: 20px;
+    overflow: hidden;
+    /* Internal parts scroll */
+    max-height: calc(100vh - 60px);
+    /* Approx header height */
+}
+
+/* --- 1. Top Section: Inventory Shelf --- */
+.ingredient-shelf {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 15px 20px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    overflow-x: auto;
+    /* Horizontal Scroll */
+    min-height: 100px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Scrollbar styling for shelf */
+.ingredient-shelf::-webkit-scrollbar {
+    height: 8px;
+}
+
+.ingredient-shelf::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ingredient-shelf::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
 .ingredient-item {
     width: 60px;
     height: 60px;
+    border-radius: 8px;
     cursor: grab;
-    /* Handje laten zien zodat je weet dat je kan pakken */
-    transition: transform 0.2s ease;
-
-    /* Zorg dat de elementen netjes naast elkaar staan */
-    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    /* Don't shrink */
+    position: relative;
 }
 
-/* Klein effectje als je eroverheen gaat met de muis */
 .ingredient-item:hover {
-    transform: scale(1.1);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: var(--shadow-hover);
     z-index: 10;
 }
 
-/* Wordt toegepast als je het item daadwerkelijk vast hebt */
 .ingredient-item:active {
     cursor: grabbing;
 }
 
-/* De Pot Container */
+/* Tooltip */
+.ingredient-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
+}
+
+.ingredient-item:hover::after {
+    opacity: 1;
+}
+
+/* --- 2. Middle Section: Workstation (Factory Floor) --- */
+.workstation {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    /* Optional: Industrial floor pattern */
+    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Pot Area */
 .pot-container {
     display: flex;
-    gap: 20px;
-    margin-top: 30px;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-end;
     padding: 20px;
-    background: #e0e0e0;
-    min-height: 150px;
+    min-height: 140px;
 }
 
-/* De individuele pot */
 .pot {
-    width: 100px;
-    height: 120px;
-    background-color: white;
-    border: 3px solid #999;
-    border-radius: 0 0 20px 20px;
-    /* Pot vormpje */
+    width: 90px;
+    height: 110px;
+    border: 3px solid #94a3b8;
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
     position: relative;
     display: flex;
-    align-items: flex-end;
-    /* Ingrediënten zakken naar bodem */
     justify-content: center;
+    align-items: flex-end;
     transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
 }
 
-/* Als je er een geldig ingrediënt boven houdt */
+.pot::before {
+    /* Rim */
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    height: 10px;
+    border: 3px solid #94a3b8;
+    border-radius: 6px;
+}
+
 .pot.drag-over-valid {
-    border-color: #4CAF50;
-    /* Groen */
-    box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
     transform: scale(1.05);
 }
 
-/* Als het NIET mag (bijv. verkeerde snelheid) */
 .pot.drag-over-invalid {
-    border-color: #F44336;
-    /* Rood */
-    background-color: rgba(244, 67, 54, 0.1);
+    border-color: var(--error-color);
+    background: rgba(231, 76, 60, 0.1);
 }
 
-/* Ingrediënten in de pot worden kleiner */
 .pot .ingredient-item {
     transform: scale(0.6);
     margin: -10px;
-    /* Beetje overlap */
+    pointer-events: none;
 }
 
-/* --- Machine Styles --- */
+/* Machine Area */
 .machine-row {
     display: flex;
     gap: 40px;
-    margin-top: 40px;
-    padding: 20px;
-    border-top: 2px dashed #ccc;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .machine {
-    background: #333;
-    color: white;
-    width: 250px;
-    padding: 10px;
-    border-radius: 10px;
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    color: #f8fafc;
+    width: 220px;
+    padding: 20px;
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
+    box-shadow: var(--shadow-hover);
+    border: 1px solid #334155;
 }
 
 .machine-status {
-    font-family: monospace;
-    color: #0f0;
-    margin-bottom: 10px;
-}
-
-/* De plek waar je de pot in dropt */
-.machine-slot {
-    width: 120px;
-    height: 140px;
-    background: #555;
-    border: 2px dashed #777;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    margin-bottom: 10px;
-    transition: background 0.3s;
-}
-
-.machine-slot.drag-over-valid {
-    background: #4CAF50;
-    /* Groen licht als je er een pot boven houdt */
-}
-
-/* Start knop */
-.btn-mix {
-    background: #2196F3;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    cursor: pointer;
-    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #4ade80;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
     font-weight: bold;
 }
 
-.btn-mix:disabled {
-    background: #555;
-    cursor: not-allowed;
-    color: #888;
+.machine-slot {
+    width: 100px;
+    height: 120px;
+    background: #334155;
+    border: 2px dashed #475569;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 15px;
+    transition: all 0.2s;
 }
 
-/* De Uitgang (Waar de pot verschijnt na mixen) */
-.machine-output {
-    margin-top: 10px;
+.machine-slot.drag-over-valid {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: var(--success-color);
+}
+
+.btn-mix {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
     width: 100%;
-    height: 10px;
-    /* Klein streepje, wordt groter als er iets uitkomt? Of we zetten hem eronder */
-    background: #222;
+    transition: background 0.2s;
 }
 
-/* --- Animatie: SHAKE --- */
+.btn-mix:hover:not(:disabled) {
+    background: #2980b9;
+}
+
+.btn-mix:disabled {
+    background: #475569;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.machine-output {
+    height: 6px;
+    width: 50%;
+    background: #475569;
+    margin-top: 15px;
+    border-radius: 3px;
+}
+
+/* --- 3. Bottom Section: Dispatch (Conveyor) --- */
+#output-conveyor {
+    background: #1e293b;
+    /* Dark conveyor belt */
+    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    overflow-x: auto;
+    border-top: 4px solid #f59e0b;
+    /* Amber caution stripe */
+    color: white;
+}
+
+#output-conveyor h3 {
+    width: 150px;
+    /* Fixed width label */
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+/* --- Animations --- */
 @keyframes shake {
     0% {
         transform: translate(1px, 1px) rotate(0deg);
@@ -200,263 +390,27 @@
 }
 
 .machine-running {
-    animation: shake 0.5s;
-    animation-iteration-count: infinite;
-    /* Blijven shaken zolang hij draait */
-    background: #442200;
-    /* Beetje kleurverandering */
+    animation: shake 0.5s infinite;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+    /* Heat glow */
 }
 
-/* Ingrediënten in de pot worden kleiner EN blokkeren de muis niet */
-.pot .ingredient-item {
-    transform: scale(0.6);
-    margin: -10px;
-    pointer-events: none;
-    /* <--- VOEG DIT TOE: Cruciaal voor pot-dragen! */
+/* --- Color Lab Modal --- */
+main#color-lab-container {
+    padding: 30px;
 }
 
-/* --- Ingredient Styles Update --- */
-.ingredient-item {
-    width: 60px;
-    height: 60px;
-    cursor: grab;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    /* Bouncy effect */
-    position: relative;
-    /* Nodig voor de tooltip positionering */
-    display: inline-block;
-}
-
-/* De Custom Tooltip */
-.ingredient-item::after {
-    content: attr(data-tooltip);
-    /* We halen de tekst uit een attribuut */
-    position: absolute;
-    bottom: 110%;
-    /* Boven het item */
-    left: 50%;
-    transform: translateX(-50%);
-
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    z-index: 100;
-}
-
-/* Pijltje onder de tooltip */
-.ingredient-item::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-/* Laat zien bij hover */
-.ingredient-item:hover::after,
-.ingredient-item:hover::before {
-    opacity: 1;
-}
-
-.ingredient-item:hover {
-    transform: scale(1.15) rotate(5deg);
-    z-index: 10;
-}
-
-/* --- Cleanup & Overflow Fixes --- */
-
-/* Fix left overflow on shelf */
-.ingredient-shelf {
-    padding-left: 20px;
-    /* Meer ruimte links */
-    overflow-x: auto;
-    /* Scrollen als het te breed is */
-    justify-content: flex-start;
-    /* Niet centreren als dat issue geeft */
-    gap: 15px;
-}
-
-/* Cleaner look for ingredients (remove bouncy rotate for serious look?) */
-/* User asked for cleaner UI. Let's make it a bit more subtle but still interactive */
-.ingredient-item {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    /* Slightly softer corners */
-}
-
-.ingredient-item:hover {
-    transform: translateY(-5px);
-    /* Just lift up, no rotation */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-}
-
-/* Cleaner Tooltip */
-.ingredient-item::after {
-    background: #222;
-    /* Dark grey instead of strict black */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Cleaner font */
-    padding: 8px 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Cleaner Output Area */
-#output-conveyor {
-    background: #f9f9f9;
-    /* Light background for clean look instead of dark */
-    border-top: 4px solid #e0e0e0;
-    /* Subtle border */
-    color: #333;
-}
-
-
-/* --- Global & Layout Fixes (Compact Mode) --- */
-body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-    color: #333;
-    height: 100vh;
-    /* Force full height */
-    overflow: hidden;
-    /* Prevent body scroll if possible */
-}
-
-#app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-header {
-    background-color: #ffffff;
-    padding: 10px 0;
-    /* Reduced padding */
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    z-index: 100;
-    position: relative;
-    border-bottom: 1px solid #eee;
-    flex-shrink: 0;
-    /* Keep header size */
-}
-
-header h1 {
-    margin: 0;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 1.4rem;
-    /* Smaller font */
-}
-
-nav {
-    margin-top: 5px;
-    /* Reduced margin */
-}
-
-nav button {
-    background: transparent;
-    border: 1px solid #ccc;
-    padding: 4px 12px;
-    /* Smaller buttons */
-    border-radius: 20px;
-    cursor: pointer;
-    margin: 0 5px;
-    font-size: 0.8rem;
-    color: #666;
-}
-
-#weather-display {
-    margin-top: 5px;
-    font-size: 0.8rem;
-    color: #666;
-}
-
-#simulation-container,
-#color-lab-container {
-    max-width: 1200px;
-    margin: 40px auto 10px auto;
-    /* Increased top margin */
-    width: 95%;
-    /* Wider usage */
-    flex-grow: 1;
-    /* Take remaining space */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    /* Distribute space */
-    padding-bottom: 0;
-}
-
-/* Shelf cleanup */
-.ingredient-shelf {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 40px 20px 20px 20px;
-    /* Meer ruimte aan de bovenkant zodat tooltips/items niet overlappen */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    margin-bottom: 10px;
-    gap: 15px;
-    min-height: auto;
-    /* Remove large min-height */
-    justify-content: center;
-    /* Center ingredients */
-}
-
-/* Pot Container cleanup */
-.pot-container {
-    background: transparent;
-    padding: 0;
-    margin: 10px 0;
-    /* Reduced margin */
-    justify-content: center;
-    min-height: auto;
-}
-
-.pot {
-    width: 80px;
-    /* Smaller pots */
-    height: 100px;
-    background: rgba(255, 255, 255, 0.8);
+dialog#color-popup {
+    border: none;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.95);
 }
 
-/* Machine Row cleanup */
-.machine-row {
-    border-top: none;
-    background: #fff;
-    padding: 15px;
-    /* Compact padding */
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    justify-content: center;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-.machine {
-    width: 200px;
-    /* Smaller machines */
-    padding: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.machine-slot {
-    width: 100px;
-    /* Smaller slot */
-    height: 110px;
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
 }

@@ -32,14 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const container = document.getElementById('simulation-container');
 
-    // 2. Maak Layout (Plank en Potten Area)
+    // 2. Maak Layout (Plank)
     const shelf = document.createElement('div');
     shelf.className = 'ingredient-shelf';
     container.appendChild(shelf);
 
+    // [NEW] Wrapper voor workstation (Factory Floor)
+    const workstation = document.createElement('div');
+    workstation.className = 'workstation';
+    container.appendChild(workstation);
+
     const potArea = document.createElement('div');
     potArea.className = 'pot-container';
-    container.appendChild(potArea);
+    workstation.appendChild(potArea); // Append to workstation
 
     // 3. Maak Data (Ingredients)
     const ing1 = new Ingredient("Rode Slijm", { h: 0, s: 80, l: 50 }, 5, "slimy", 2000);
@@ -65,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. Maak Machines aan
     const machineArea = document.createElement('div');
     machineArea.className = 'machine-row';
-    container.appendChild(machineArea);
+    workstation.appendChild(machineArea); // Append to workstation
 
     // Maak 2 machines: Eentje snel (5), eentje traag (9) ofzo
     const machine1 = new Machine("M1", 5); // Accepteert alleen ingredients met speed 5
@@ -85,19 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     outputArea.innerHTML = '<h3>Klaar voor transport</h3>';
 
     // Wat styling direct hier (of verplaats naar CSS)
-    outputArea.style.cssText = `
-        margin-top: 10px;
-        padding: 10px;
-        background: #333;
-        border-top: 5px solid #FFD700; /* Goud randje */
-        min-height: 80px; /* Smaller height */
-        display: flex;
-        gap: 20px;
-        align-items: center;
-        justify-content: center; /* Center the output pots */
-        overflow-x: auto;
-        border-radius: 8px;
-    `;
+    // Wat styling direct hier (of verplaats naar CSS)
+    // Inline styles removed in favor of CSS class #output-conveyor
 
     container.appendChild(outputArea);
 
