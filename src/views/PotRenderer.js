@@ -25,12 +25,39 @@ export class PotRenderer {
     }
 
     static update(potEl, potModel) {
+        console.log("PotRenderer updating:", potModel.id, "isMixed:", potModel.isMixed);
         const label = potEl.querySelector('span');
-        if (potModel.isEmpty()) {
+
+        if (potModel.isMixed && potModel.finalColor) {
+            // SCENARIO: GEMENGD
+            const color = potModel.finalColor;
+
+            // 1. Geef de pot de kleur van de mix
+            potEl.style.background = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
+
+            // 2. Maak tekst wit of zwart voor contrast
+            potEl.style.boxShadow = `0 0 20px hsl(${color.h}, 100%, 50%)`; // Gloed
+
+            // 3. Verberg de losse ingrediënten (zitten er nog wel in, maar onzichtbaar)
+            Array.from(potEl.children).forEach(child => {
+                if (child.classList.contains('ingredient-item')) {
+                    child.style.display = 'none';
+                }
+            });
+
+            label.innerText = "Mixed!";
+            label.style.color = "white";
+            label.style.textShadow = "0 1px 2px black";
+
+        } else if (potModel.isEmpty()) {
             label.innerText = "Leeg";
+            potEl.style.background = "white"; // Reset
+            potEl.style.boxShadow = "none";
         } else {
             const speed = potModel.ingredients[0].speed;
             label.innerText = `Speed: ${speed}`;
+            potEl.style.background = "white"; // Reset
+            potEl.style.boxShadow = "none";
         }
     }
 }

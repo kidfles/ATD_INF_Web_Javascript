@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         display: flex;
         gap: 20px;
         align-items: center;
+        justify-content: center; /* Center the output pots */
         overflow-x: auto;
         border-radius: 8px;
     `;

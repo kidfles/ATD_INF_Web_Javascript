@@ -1,5 +1,6 @@
 import { AppStore } from '../utils/AppStore.js';
 import { MachineRenderer } from '../views/MachineRenderer.js';
+import { PotRenderer } from '../views/PotRenderer.js';
 
 export class MachineController {
     constructor() {
@@ -58,6 +59,12 @@ export class MachineController {
         machine.finish();
         MachineRenderer.updateStatus(machine.id, "DONE!", false);
 
+        // --- NIEUW: Voer de mix berekening uit ---
+        if (machine.currentPot) {
+            machine.currentPot.mix();
+        }
+        // ----------------------------------------
+
         // 4. Verplaats pot naar de "Andere Kant" (Output)
         // We simuleren dit door hem uit het slot te halen en ernaast te zetten
         const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machine.id}"]`) || document.querySelector(`.machine-slot[data-machineId="${machine.id}"]`);
@@ -79,6 +86,11 @@ export class MachineController {
             } else {
                 // Fallback als area niet bestaat
                 slotEl.closest('.machine').appendChild(potEl);
+            }
+
+            // Nadat je de pot verplaatst hebt, update de view zodat hij er gemengd uitziet:
+            if (machine.currentPot) {
+                PotRenderer.update(potEl, machine.currentPot);
             }
         }
 

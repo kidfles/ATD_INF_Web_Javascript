@@ -31,9 +31,6 @@ export class Machine {
 
     finish() {
         this.status = 'done';
-        if (this.currentPot) {
-            this.currentPot.isMixed = true;
-        }
     }
 
     reset() {
