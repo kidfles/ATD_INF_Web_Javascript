@@ -12,11 +12,30 @@
     <div id="app">
         <header>
             <h1>Future Color</h1>
+            <nav style="margin-top: 10px;">
+                <button id="nav-sim">Menghal</button>
+                <button id="nav-lab">Kleuren Lab</button>
+            </nav>
             <div id="weather-display">Laden...</div>
         </header>
 
         <main id="simulation-container">
         </main>
+
+        <main id="color-lab-container" style="display:none; padding: 20px;">
+            <h2>Kwaliteit & Kleur Test</h2>
+            <div style="margin-bottom: 20px;">
+                <p>Klik op een vierkant om de Triadic kleuren te zien.</p>
+                <button id="btn-generate-grid">Genereer 6x6 Grid</button>
+            </div>
+            <div id="color-grid" style="display: flex; flex-wrap: wrap; width: 320px; gap: 5px;"></div>
+        </main>
+
+        <dialog id="color-popup" style="padding: 20px; border-radius: 8px; border: 1px solid #ccc;">
+            <h3 id="popup-title">Kleur Analyse</h3>
+            <div id="popup-swatches" style="display:flex; gap:10px; margin: 20px 0;"></div>
+            <button onclick="document.getElementById('color-popup').close()">Sluiten</button>
+        </dialog>
     </div>
 
     <script type="module" src="./main.js"></script>
