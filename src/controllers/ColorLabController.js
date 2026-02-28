@@ -24,6 +24,10 @@ export class ColorLabController {
             this.loadMixedPots();     // Laad potten
             if (this.gridContainer.children.length === 0) this.generateEmptyGrid(); // Maak grid als die leeg is
         });
+
+        document.getElementById('btn-close-popup').addEventListener('click', () => {
+            this.popup.close();
+        });
     }
 
     switchTab(tabName) {
