@@ -47,7 +47,15 @@ export class ColorLabController {
     generateEmptyGrid() {
         this.gridContainer.innerHTML = '';
 
-        for (let i = 0; i < 36; i++) {
+        // Lees de ingestelde waarden
+        const rows = parseInt(document.getElementById('grid-rows').value) || 6;
+        const cols = parseInt(document.getElementById('grid-cols').value) || 6;
+
+        // Pas de CSS grid-template-columns dynamisch aan
+        this.gridContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+        // Maak rows × cols vakjes
+        for (let i = 0; i < rows * cols; i++) {
             const square = document.createElement('div');
             square.className = 'color-grid-square empty'; // Voor styling & selectie
             square.classList.add('grid-square'); // Voor JS selectie in DragController
