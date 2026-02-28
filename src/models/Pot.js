@@ -5,7 +5,6 @@ export class Pot {
         this.id = crypto.randomUUID();
         // Lijst met toegevoegde ingrediënten
         this.ingredients = [];
-        this.maxIngredients = 67;
         this.isMixed = false;
         this.finalColor = null;
     }
@@ -15,11 +14,6 @@ export class Pot {
      * @param {Ingredient} ingredient
      */
     addIngredient(ingredient) {
-        // Controleer of de pot vol is
-        if (this.ingredients.length >= this.maxIngredients) {
-            throw new AppError("Pot zit vol!", ERROR_CODES.POT_FULL);
-        }
-
         // Controleer of de snelheid overeenkomt met de inhoud
         if (this.ingredients.length > 0) {
             const currentSpeed = this.ingredients[0].speed;
