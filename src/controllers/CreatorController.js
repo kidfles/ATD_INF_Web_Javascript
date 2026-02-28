@@ -42,13 +42,18 @@ export class CreatorController {
 
         // Nieuwe Machine
         document.getElementById('btn-create-mach').addEventListener('click', () => this.createMachine());
+
+        // Kleur Modus selectie
+        document.getElementById('color-mode').addEventListener('change', (e) => {
+            document.getElementById('color-input-hex').style.display = e.target.value === 'hex' ? 'flex' : 'none';
+            document.getElementById('color-input-rgb').style.display = e.target.value === 'rgb' ? 'flex' : 'none';
+            document.getElementById('color-input-hsl').style.display = e.target.value === 'hsl' ? 'flex' : 'none';
+        });
     }
 
     createIngredient() {
         const nameInput = document.getElementById('new-ing-name');
         const name = nameInput.value || "Naamloos";
-
-        const hexColor = document.getElementById('new-ing-color').value || "#ff0000";
 
         const structure = document.getElementById('new-ing-struct').value;
         const speed = parseInt(document.getElementById('new-ing-speed').value);
@@ -59,8 +64,26 @@ export class CreatorController {
             return;
         }
 
-        // Hex naar HSL omrekenen
-        const hsl = ColorMath.hexToHSL(hexColor);
+        const mode = document.getElementById('color-mode').value;
+        let hsl;
+
+        if (mode === 'rgb') {
+            const r = parseInt(document.getElementById('ing-r').value) || 0;
+            const g = parseInt(document.getElementById('ing-g').value) || 0;
+            const b = parseInt(document.getElementById('ing-b').value) || 0;
+            // Converteer RGB naar HSL via een tussenstap
+            const hex = '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+            hsl = ColorMath.hexToHSL(hex);
+        } else if (mode === 'hsl') {
+            hsl = {
+                h: parseInt(document.getElementById('ing-h').value) || 0,
+                s: parseInt(document.getElementById('ing-s').value) || 100,
+                l: parseInt(document.getElementById('ing-l').value) || 50,
+            };
+        } else {
+            const hexColor = document.getElementById('new-ing-color').value || "#ff0000";
+            hsl = ColorMath.hexToHSL(hexColor);
+        }
         const newIng = new Ingredient(name, hsl, speed, structure, time);
 
         // Opslaan in Store

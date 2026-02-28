@@ -91,11 +91,40 @@
                             <input type="text" id="new-ing-name" placeholder="Naam" style="padding:5px;">
                         </div>
 
-                        <!-- Kleur (Simpel) -->
-                        <div style="display:flex; flex-direction:column; align-items:center;">
-                            <label style="font-size:0.8rem;">Kleur</label>
-                            <input type="color" id="new-ing-color" value="#ff0000"
-                                style="height:30px; width:40px; padding:0; border:none; cursor:pointer;">
+                        <!-- Kleur Keuze (RGB/HSL/Hex) -->
+                        <div style="display:flex; flex-direction:column; gap:5px;">
+                            <label style="font-size:0.8rem;">Kleur modus:</label>
+                            <select id="color-mode" style="padding:4px; font-size:0.8rem;">
+                                <option value="hex">Picker (Hex)</option>
+                                <option value="rgb">RGB</option>
+                                <option value="hsl">HSL</option>
+                            </select>
+
+                            <!-- Hex picker (standaard zichtbaar) -->
+                            <div id="color-input-hex">
+                                <input type="color" id="new-ing-color" value="#ff0000"
+                                    style="height:30px; width:40px; padding:0; border:none; cursor:pointer;">
+                            </div>
+
+                            <!-- RGB inputs (standaard verborgen) -->
+                            <div id="color-input-rgb" style="display:none; gap:4px;">
+                                <input type="number" id="ing-r" placeholder="R" min="0" max="255"
+                                    style="width:45px; padding:4px;">
+                                <input type="number" id="ing-g" placeholder="G" min="0" max="255"
+                                    style="width:45px; padding:4px;">
+                                <input type="number" id="ing-b" placeholder="B" min="0" max="255"
+                                    style="width:45px; padding:4px;">
+                            </div>
+
+                            <!-- HSL inputs (standaard verborgen) -->
+                            <div id="color-input-hsl" style="display:none; gap:4px;">
+                                <input type="number" id="ing-h" placeholder="H" min="0" max="360"
+                                    style="width:45px; padding:4px;">
+                                <input type="number" id="ing-s" placeholder="S%" min="0" max="100"
+                                    style="width:45px; padding:4px;">
+                                <input type="number" id="ing-l" placeholder="L%" min="0" max="100"
+                                    style="width:45px; padding:4px;">
+                            </div>
                         </div>
 
                         <!-- Structuur -->
