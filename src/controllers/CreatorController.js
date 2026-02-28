@@ -2,10 +2,10 @@ import { Ingredient } from '../models/Ingredient.js';
 import { Pot } from '../models/Pot.js';
 import { Machine } from '../models/Machine.js';
 import { AppStore } from '../utils/AppStore.js';
-import { IngredientRenderer } from '../views/IngredientRenderer.js';
 import { PotRenderer } from '../views/PotRenderer.js';
 import { MachineRenderer } from '../views/MachineRenderer.js';
 import { ColorMath } from '../utils/ColorMath.js';
+import { eventBus } from '../utils/EventBus.js';
 
 export class CreatorController {
     constructor() {
@@ -89,11 +89,8 @@ export class CreatorController {
         // Opslaan in Store
         AppStore.addIngredient(newIng);
 
-        // Renderen op de plank
-        const shelf = document.querySelector('.ingredient-shelf');
-        if (shelf) {
-            shelf.appendChild(IngredientRenderer.create(newIng));
-        }
+        // Renderen op de plank via EventBus
+        eventBus.publish('ingredient:created', newIng);
 
         // Feedback & Reset
         alert(`Ingrediënt "${name}" aangemaakt!`);

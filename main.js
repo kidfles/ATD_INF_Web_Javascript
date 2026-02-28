@@ -42,10 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const container = document.getElementById('simulation-container');
 
-    // 3. Maak Layout (Plank)
     const shelf = document.createElement('div');
     shelf.className = 'ingredient-shelf';
     container.appendChild(shelf);
+
+    // Reageer op nieuwe ingrediënten vanaf een willekeurige plek
+    eventBus.subscribe('ingredient:created', (ingredient) => {
+        shelf.appendChild(IngredientRenderer.create(ingredient));
+    });
 
     // 4. Maak Layout (Werkstation)
     const workstation = document.createElement('div');
