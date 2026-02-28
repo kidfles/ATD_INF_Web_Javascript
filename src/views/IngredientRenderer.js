@@ -38,13 +38,13 @@ export class IngredientRenderer {
         delBtn.className = 'btn-delete';
         delBtn.title = 'Verwijder Ingrediënt';
         delBtn.dataset.id = ingredient.id; // Markeren voor makkelijke selectie
-        delBtn.onclick = (e) => {
+        delBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // Voorkom drag start als je klikt
             if (confirm(`Verwijder ${ingredient.name}?`)) {
                 AppStore.removeIngredient(ingredient.id);
                 el.remove();
             }
-        };
+        });
         el.appendChild(delBtn);
 
         return el;

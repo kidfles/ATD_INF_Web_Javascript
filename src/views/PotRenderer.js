@@ -29,13 +29,13 @@ export class PotRenderer {
         delBtn.className = 'btn-delete';
         delBtn.title = 'Verwijder Pot';
         delBtn.style.right = '-10px'; // Beetje offset voor pot
-        delBtn.onclick = (e) => {
+        delBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (confirm('Verwijder deze pot?')) {
                 AppStore.removePot(potModel.id);
                 el.remove();
             }
-        };
+        });
         el.appendChild(delBtn);
 
         return el;
