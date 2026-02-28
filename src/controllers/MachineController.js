@@ -98,7 +98,11 @@ export class MachineController {
             if (outputArea) {
                 outputArea.appendChild(potEl);
 
-                // Optioneel: speel een geluidje of animatie
+                // Voeg de animatieklasse toe en verwijder hem daarna (zodat hij herbruikbaar is)
+                potEl.classList.add('pot-arrived');
+                potEl.addEventListener('animationend', () => {
+                    potEl.classList.remove('pot-arrived');
+                }, { once: true });
             } else {
                 // Fallback als zone niet bestaat
                 slotEl.closest('.machine').appendChild(potEl);
