@@ -178,7 +178,7 @@ export class DragController {
     processMachineDrop(machineId, potId) {
         // We verplaatsen de pot DOM naar het slot
         const potEl = document.querySelector(`.pot[data-id="${potId}"]`);
-        const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machineId}"]`) || document.querySelector(`.machine-slot[data-machineId="${machineId}"]`);
+        const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machineId}"]`);
 
         if (potEl && slotEl) {
             // Check even of er al niet iets staat
