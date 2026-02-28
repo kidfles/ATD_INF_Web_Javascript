@@ -12,6 +12,7 @@ export class DragController {
         document.addEventListener('dragover', (e) => this.handleDragOver(e));
         document.addEventListener('dragleave', (e) => this.handleDragLeave(e));
         document.addEventListener('drop', (e) => this.handleDrop(e));
+        document.addEventListener('dragend', (e) => this.handleDragEnd(e));
     }
 
     handleDragStart(e) {
@@ -256,5 +257,21 @@ export class DragController {
                 alert(error.message);
             }
         }
+    }
+
+    handleDragEnd(e) {
+        // Herstel de opacity van het item dat gesleept werd, ongeacht waar het terechtkwam
+        const target = e.target.closest('[draggable="true"]');
+        if (target) {
+            target.style.opacity = '1';
+        }
+
+        // Verwijder alle visuele drag-feedback van dropzones
+        document.querySelectorAll('.drag-over-valid, .drag-over-invalid').forEach(el => {
+            el.classList.remove('drag-over-valid', 'drag-over-invalid');
+        });
+
+        // Reset draggedItem altijd op dragend
+        this.draggedItem = null;
     }
 }
