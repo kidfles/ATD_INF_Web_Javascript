@@ -32,7 +32,6 @@ window.addEventListener('unhandledrejection', (event) => {
 
 // 2. Applicatie Initialisatie
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Future Color App Initialized");
 
     // 1. Start de Sleep Controller (DragController)
     new DragController();
@@ -147,5 +146,4 @@ document.addEventListener('DOMContentLoaded', () => {
     new ColorLabController();
     new CreatorController();
 
-    console.log("Applicatie volledig gestart.");
 });

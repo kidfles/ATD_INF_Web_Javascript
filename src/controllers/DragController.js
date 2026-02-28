@@ -8,8 +8,6 @@ export class DragController {
     }
 
     init() {
-        console.log("DragController is actief...");
-
         document.addEventListener('dragstart', (e) => this.handleDragStart(e));
         document.addEventListener('dragover', (e) => this.handleDragOver(e));
         document.addEventListener('dragleave', (e) => this.handleDragLeave(e));
@@ -20,8 +18,6 @@ export class DragController {
         const target = e.target.closest('[draggable="true"]');
 
         if (!target || !target.dataset.type) return;
-
-        console.log("Drag gestart:", target.dataset.type, target.dataset.id);
 
         this.draggedItem = {
             id: target.dataset.id,
@@ -170,8 +166,6 @@ export class DragController {
 
                 // Sla de hue op voor de click-popup
                 gridSquare.dataset.hue = color.h;
-
-                console.log("Vakje geverfd met hue:", color.h);
             }
             this.draggedItem = null;
             return;
@@ -186,8 +180,6 @@ export class DragController {
         const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machineId}"]`) || document.querySelector(`.machine-slot[data-machineId="${machineId}"]`);
 
         if (potEl && slotEl) {
-            console.log(`Processing drop for Pot ${potId} into Machine ${machineId}`);
-
             // Check even of er al niet iets staat
             if (slotEl.children.length > 0) {
                 console.warn("Slot is niet leeg!", slotEl.children);
@@ -207,7 +199,6 @@ export class DragController {
 
             try {
                 machine.loadPot(pot);
-                console.log(`Pot geladen in machine ${machineId}`);
             } catch (e) {
                 // Behandel AppErrors specifiek
                 if (e.name === 'AppError' && e.code === 'MACHINE_SPEED_MISMATCH') {
@@ -236,7 +227,6 @@ export class DragController {
         try {
             // 1. Update Model
             pot.addIngredient(ingredient);
-            console.log("Ingrediënt toegevoegd!", pot);
 
             // 2. Update View
             const potEl = document.querySelector(`.pot[data-id="${potId}"]`);

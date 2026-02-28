@@ -62,8 +62,6 @@ export class MachineController {
 
         const finalTime = baseTime * AppStore.weather.timeModifier;
 
-        console.log(`Start mixen. Basis: ${baseTime}ms, Weerfactor: ${AppStore.weather.timeModifier}, Totaal: ${finalTime}ms`);
-
         // 2. Update Status & UI
         machine.start();
         MachineRenderer.updateStatus(machine.id, `MIXING (${Math.round(finalTime)}ms)...`, true);
@@ -101,7 +99,6 @@ export class MachineController {
                 outputArea.appendChild(potEl);
 
                 // Optioneel: speel een geluidje of animatie
-                console.log(`Pot verplaatst naar output band vanuit Machine ${machine.id}`);
             } else {
                 // Fallback als zone niet bestaat
                 slotEl.closest('.machine').appendChild(potEl);

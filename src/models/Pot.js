@@ -46,7 +46,6 @@ export class Pot {
             l: 50
         };
         this.isMixed = true;
-        console.log(`Pot gemengd. Kleur: ${this.finalColor.h}`, this.finalColor);
     }
 
     /**

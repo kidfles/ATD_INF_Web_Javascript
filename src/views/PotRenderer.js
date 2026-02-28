@@ -42,7 +42,6 @@ export class PotRenderer {
     }
 
     static update(potEl, potModel) {
-        console.log("PotRenderer updating:", potModel.id, "isMixed:", potModel.isMixed);
         const label = potEl.querySelector('span');
 
         if (potModel.isMixed && potModel.finalColor) {
