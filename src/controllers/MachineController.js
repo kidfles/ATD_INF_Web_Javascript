@@ -1,7 +1,6 @@
 import { AppStore } from '../utils/AppStore.js';
 import { AppError, ERROR_CODES } from '../utils/AppError.js';
 import { MachineRenderer } from '../views/MachineRenderer.js';
-import { PotRenderer } from '../views/PotRenderer.js';
 import { eventBus } from '../utils/EventBus.js';
 
 export class MachineController {
@@ -137,9 +136,12 @@ export class MachineController {
                 slotEl.closest('.machine').appendChild(potEl);
             }
 
-            // Nadat je de pot verplaatst hebt, update de view zodat hij er gemengd uitziet:
+            // Nadat je de pot verplaatst hebt, stuur een event zodat hij er gemengd uitziet:
             if (machine.currentPot) {
-                PotRenderer.update(potEl, machine.currentPot);
+                eventBus.publish('pot:mixed', {
+                    pot: machine.currentPot,
+                    potEl: potEl
+                });
             }
         }
 

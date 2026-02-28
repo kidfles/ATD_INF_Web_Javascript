@@ -1,6 +1,7 @@
 import { ColorMath } from '../utils/ColorMath.js';
 import { AppStore } from '../utils/AppStore.js';
 import { PotRenderer } from '../views/PotRenderer.js'; // Importeer de renderer
+import { eventBus } from '../utils/EventBus.js';
 
 export class ColorLabController {
     constructor() {
@@ -27,6 +28,17 @@ export class ColorLabController {
 
         document.getElementById('btn-close-popup').addEventListener('click', () => {
             this.popup.close();
+        });
+
+        eventBus.subscribe('pot:mixed', ({ pot, potEl }) => {
+            // Update the visual pot
+            PotRenderer.update(potEl, pot);
+
+            // Also refresh the paint rack if the lab is visible
+            const labVisible = document.getElementById('color-lab-container').style.display !== 'none';
+            if (labVisible) {
+                this.loadMixedPots();
+            }
         });
     }
 
