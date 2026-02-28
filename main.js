@@ -1,4 +1,5 @@
 // Importeer globale utilities
+import { eventBus } from './src/utils/EventBus.js';
 import { Ingredient } from './src/models/Ingredient.js';
 import { Pot } from './src/models/Pot.js';
 import { AppStore } from './src/utils/AppStore.js';

@@ -2,10 +2,39 @@ import { AppStore } from '../utils/AppStore.js';
 import { AppError, ERROR_CODES } from '../utils/AppError.js';
 import { MachineRenderer } from '../views/MachineRenderer.js';
 import { PotRenderer } from '../views/PotRenderer.js';
+import { eventBus } from '../utils/EventBus.js';
 
 export class MachineController {
     constructor() {
         this.initEventListeners();
+
+        // Reageer wanneer het weer verandert
+        eventBus.subscribe('weather:changed', (weather) => {
+            this.handleWeatherChange(weather);
+        });
+    }
+
+    handleWeatherChange(weather) {
+        const startButtons = document.querySelectorAll('.btn-mix');
+
+        if (weather.heatWave) {
+            // Controleer of er al een machine draait
+            const alreadyRunning = AppStore.machines.some(m => m.status === 'running');
+            startButtons.forEach(btn => {
+                btn.disabled = alreadyRunning;
+                btn.title = alreadyRunning ? 'Hittegolf: max 1 machine actief' : '';
+            });
+        } else {
+            // Zet alle stilstaande machines weer aan
+            startButtons.forEach(btn => {
+                const machineId = btn.id.replace('btn-', '');
+                const machine = AppStore.machines.find(m => m.id === machineId);
+                if (machine && machine.status !== 'running') {
+                    btn.disabled = false;
+                    btn.title = '';
+                }
+            });
+        }
     }
 
     initEventListeners() {
