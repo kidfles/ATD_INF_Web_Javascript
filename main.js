@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     shelf.className = 'ingredient-shelf';
     container.appendChild(shelf);
 
-    // Reageer op nieuwe ingrediënten vanaf een willekeurige plek
+    // 3. Reageer op nieuwe ingrediënten vanaf een willekeurige plek
     eventBus.subscribe('ingredient:created', (ingredient) => {
         shelf.appendChild(IngredientRenderer.create(ingredient));
     });
