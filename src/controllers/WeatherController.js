@@ -1,5 +1,6 @@
 import { WeatherService } from '../services/WeatherService.js';
 import { AppStore } from '../utils/AppStore.js';
+import { eventBus } from '../utils/EventBus.js';
 
 export class WeatherController {
 
@@ -92,6 +93,9 @@ export class WeatherController {
             timeModifier: modifier,
             heatWave: heatWave
         });
+
+        // Stuur een signaal dat het weer is veranderd
+        eventBus.publish('weather:changed', AppStore.weather);
 
         this.renderUI(temp, isRaining, modifier);
     }

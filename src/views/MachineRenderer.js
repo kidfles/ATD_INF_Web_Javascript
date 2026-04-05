@@ -24,7 +24,7 @@ export class MachineRenderer {
         delBtn.title = 'Verwijder Machine';
         delBtn.style.top = '10px';
         delBtn.style.right = '10px';
-        delBtn.onclick = (e) => {
+        delBtn.addEventListener('click', (e) => {
             e.stopPropagation();
 
             // Check status via AppStore voordat we verwijderen
@@ -40,7 +40,7 @@ export class MachineRenderer {
                 AppStore.removeMachine(machine.id);
                 el.remove();
             }
-        };
+        });
         el.appendChild(delBtn);
 
         // Status schermpje

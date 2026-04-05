@@ -1,11 +1,39 @@
 import { AppStore } from '../utils/AppStore.js';
 import { AppError, ERROR_CODES } from '../utils/AppError.js';
 import { MachineRenderer } from '../views/MachineRenderer.js';
-import { PotRenderer } from '../views/PotRenderer.js';
+import { eventBus } from '../utils/EventBus.js';
 
 export class MachineController {
     constructor() {
         this.initEventListeners();
+
+        // Reageer wanneer het weer verandert
+        eventBus.subscribe('weather:changed', (weather) => {
+            this.handleWeatherChange(weather);
+        });
+    }
+
+    handleWeatherChange(weather) {
+        const startButtons = document.querySelectorAll('.btn-mix');
+
+        if (weather.heatWave) {
+            // Controleer of er al een machine draait
+            const alreadyRunning = AppStore.machines.some(m => m.status === 'running');
+            startButtons.forEach(btn => {
+                btn.disabled = alreadyRunning;
+                btn.title = alreadyRunning ? 'Hittegolf: max 1 machine actief' : '';
+            });
+        } else {
+            // Zet alle stilstaande machines weer aan
+            startButtons.forEach(btn => {
+                const machineId = btn.id.replace('btn-', '');
+                const machine = AppStore.machines.find(m => m.id === machineId);
+                if (machine && machine.status !== 'running') {
+                    btn.disabled = false;
+                    btn.title = '';
+                }
+            });
+        }
     }
 
     initEventListeners() {
@@ -62,8 +90,6 @@ export class MachineController {
 
         const finalTime = baseTime * AppStore.weather.timeModifier;
 
-        console.log(`Start mixen. Basis: ${baseTime}ms, Weerfactor: ${AppStore.weather.timeModifier}, Totaal: ${finalTime}ms`);
-
         // 2. Update Status & UI
         machine.start();
         MachineRenderer.updateStatus(machine.id, `MIXING (${Math.round(finalTime)}ms)...`, true);
@@ -86,7 +112,7 @@ export class MachineController {
 
         // 4. Verplaats pot naar de "Andere Kant" (Output)
         // We simuleren dit door hem uit het slot te halen en ernaast te zetten
-        const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machine.id}"]`) || document.querySelector(`.machine-slot[data-machineId="${machine.id}"]`);
+        const slotEl = document.querySelector(`.machine-slot[data-machine-id="${machine.id}"]`);
         const potEl = slotEl.querySelector('.pot');
 
         if (potEl) {
@@ -100,16 +126,22 @@ export class MachineController {
             if (outputArea) {
                 outputArea.appendChild(potEl);
 
-                // Optioneel: speel een geluidje of animatie
-                console.log(`Pot verplaatst naar output band vanuit Machine ${machine.id}`);
+                // Voeg de animatieklasse toe en verwijder hem daarna (zodat hij herbruikbaar is)
+                potEl.classList.add('pot-arrived');
+                potEl.addEventListener('animationend', () => {
+                    potEl.classList.remove('pot-arrived');
+                }, { once: true });
             } else {
                 // Fallback als zone niet bestaat
                 slotEl.closest('.machine').appendChild(potEl);
             }
 
-            // Nadat je de pot verplaatst hebt, update de view zodat hij er gemengd uitziet:
+            // Nadat je de pot verplaatst hebt, stuur een event zodat hij er gemengd uitziet:
             if (machine.currentPot) {
-                PotRenderer.update(potEl, machine.currentPot);
+                eventBus.publish('pot:mixed', {
+                    pot: machine.currentPot,
+                    potEl: potEl
+                });
             }
         }
 

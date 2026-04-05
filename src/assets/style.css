@@ -638,3 +638,19 @@ dialog::backdrop {
     padding: 2px 6px;
     border-radius: 4px;
 }
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-40px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.pot-arrived {
+    animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}

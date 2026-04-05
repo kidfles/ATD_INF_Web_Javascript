@@ -32,7 +32,6 @@ window.addEventListener('unhandledrejection', (event) => {
 
 // 2. Applicatie Initialisatie
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Future Color App Initialized");
 
     // 1. Start de Sleep Controller (DragController)
     new DragController();
@@ -43,10 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const container = document.getElementById('simulation-container');
 
-    // 3. Maak Layout (Plank)
     const shelf = document.createElement('div');
     shelf.className = 'ingredient-shelf';
     container.appendChild(shelf);
+
+    // 3. Reageer op nieuwe ingrediënten vanaf een willekeurige plek
+    eventBus.subscribe('ingredient:created', (ingredient) => {
+        shelf.appendChild(IngredientRenderer.create(ingredient));
+    });
 
     // 4. Maak Layout (Werkstation)
     const workstation = document.createElement('div');
@@ -147,5 +150,4 @@ document.addEventListener('DOMContentLoaded', () => {
     new ColorLabController();
     new CreatorController();
 
-    console.log("Applicatie volledig gestart.");
 });

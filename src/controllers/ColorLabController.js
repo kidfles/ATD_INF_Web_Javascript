@@ -1,6 +1,7 @@
 import { ColorMath } from '../utils/ColorMath.js';
 import { AppStore } from '../utils/AppStore.js';
 import { PotRenderer } from '../views/PotRenderer.js'; // Importeer de renderer
+import { eventBus } from '../utils/EventBus.js';
 
 export class ColorLabController {
     constructor() {
@@ -28,6 +29,17 @@ export class ColorLabController {
         document.getElementById('btn-close-popup').addEventListener('click', () => {
             this.popup.close();
         });
+
+        eventBus.subscribe('pot:mixed', ({ pot, potEl }) => {
+            // Update the visual pot
+            PotRenderer.update(potEl, pot);
+
+            // Also refresh the paint rack if the lab is visible
+            const labVisible = document.getElementById('color-lab-container').style.display !== 'none';
+            if (labVisible) {
+                this.loadMixedPots();
+            }
+        });
     }
 
     switchTab(tabName) {
@@ -47,7 +59,15 @@ export class ColorLabController {
     generateEmptyGrid() {
         this.gridContainer.innerHTML = '';
 
-        for (let i = 0; i < 36; i++) {
+        // Lees de ingestelde waarden
+        const rows = parseInt(document.getElementById('grid-rows').value) || 6;
+        const cols = parseInt(document.getElementById('grid-cols').value) || 6;
+
+        // Pas de CSS grid-template-columns dynamisch aan
+        this.gridContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+        // Maak rows × cols vakjes
+        for (let i = 0; i < rows * cols; i++) {
             const square = document.createElement('div');
             square.className = 'color-grid-square empty'; // Voor styling & selectie
             square.classList.add('grid-square'); // Voor JS selectie in DragController
