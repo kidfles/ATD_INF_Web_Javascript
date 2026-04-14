@@ -52,7 +52,7 @@ export class PotRenderer {
             potEl.style.background = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
 
             // 2. Maak tekst wit of zwart voor contrast
-            potEl.style.boxShadow = `0 0 20px hsl(${color.h}, 100%, 50%)`; // Gloed
+            potEl.style.boxShadow = `0 0 20px hsl(${color.h}, ${color.s}%, ${color.l}%)`; // Gloed
 
             // 3. Verberg de losse ingrediënten (zitten er nog wel in, maar onzichtbaar)
             Array.from(potEl.children).forEach(child => {

@@ -31,7 +31,7 @@ export class Pot {
     mix() {
         if (this.ingredients.length === 0) return;
 
-        // Bereken de gemiddelde kleurvector
+        // Bereken de gemiddelde kleurvector voor de hue
         const hues = this.ingredients.map(i => i.color.h);
         const sumX = hues.reduce((a, h) => a + Math.cos(h * Math.PI / 180), 0);
         const sumY = hues.reduce((a, h) => a + Math.sin(h * Math.PI / 180), 0);
@@ -39,11 +39,15 @@ export class Pot {
         let avgHue = Math.atan2(sumY, sumX) * 180 / Math.PI;
         if (avgHue < 0) avgHue += 360;
 
+        // Berekent het gemiddelde voor verzadiging en helderheid
+        const avgSat = this.ingredients.reduce((sum, i) => sum + i.color.s, 0) / this.ingredients.length;
+        const avgLig = this.ingredients.reduce((sum, i) => sum + i.color.l, 0) / this.ingredients.length;
+
         // Zet de eindkleur vast
         this.finalColor = {
             h: Math.round(avgHue),
-            s: 100,
-            l: 50
+            s: Math.round(avgSat),
+            l: Math.round(avgLig)
         };
         this.isMixed = true;
     }

@@ -16,7 +16,6 @@ import { ColorLabController } from './src/controllers/ColorLabController.js';
 import { CreatorController } from './src/controllers/CreatorController.js';
 
 // 1. Globale Foutafhandeling (De "Craft")
-// 1. Globale Foutafhandeling (De "Craft")
 window.addEventListener('unhandledrejection', (event) => {
     // Check of het onze eigen AppError is
     if (event.reason && event.reason.name === 'AppError') {
