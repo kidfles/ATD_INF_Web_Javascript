@@ -78,7 +78,12 @@ export class ColorLabController {
             // Klikken werkt nog steeds (als er kleur in zit)
             square.addEventListener('click', () => {
                 if (square.dataset.hue) {
-                    this.showAnalysis(square.dataset.hue);
+                    const color = {
+                        h: parseInt(square.dataset.hue),
+                        s: parseInt(square.dataset.saturation),
+                        l: parseInt(square.dataset.lightness)
+                    };
+                    this.showAnalysis(color);
                 }
             });
 
@@ -114,8 +119,8 @@ export class ColorLabController {
         });
     }
 
-    showAnalysis(hue) {
-        const colors = ColorMath.getTriadicScheme(parseInt(hue));
+    showAnalysis(color) {
+        const colors = ColorMath.getTriadicScheme(color);
         const swatchesContainer = document.getElementById('popup-swatches');
         swatchesContainer.innerHTML = '';
 

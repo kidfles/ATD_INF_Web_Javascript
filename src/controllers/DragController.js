@@ -165,8 +165,10 @@ export class DragController {
                 gridSquare.style.backgroundColor = `hsl(${color.h}, ${color.s}%, ${color.l}%)`;
                 gridSquare.classList.remove('empty');
 
-                // Sla de hue op voor de click-popup
+                // Sla de volledige HSL op voor de click-popup
                 gridSquare.dataset.hue = color.h;
+                gridSquare.dataset.saturation = color.s;
+                gridSquare.dataset.lightness = color.l;
             }
             this.draggedItem = null;
             return;

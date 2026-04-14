@@ -37,7 +37,7 @@ export class MachineController {
     }
 
     initEventListeners() {
-        // Event delegation voor start knoppen
+        // Event delegatie voor start knoppen
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('btn-mix')) {
                 const machineId = e.target.id.replace('btn-', '');

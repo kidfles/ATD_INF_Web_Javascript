@@ -1,17 +1,18 @@
 export const ColorMath = {
     /**
      * Berekent de Triadic kleuren (120 graden en 240 graden verder).
-     * @param {number} hue - 0 tot 360
+     * @param {Object} color - {h, s, l}
      * @returns {Array} [Original, Triadic1, Triadic2] (Allemaal HSL objecten)
      */
-    getTriadicScheme(hue) {
-        const h1 = (hue + 120) % 360;
-        const h2 = (hue + 240) % 360;
+    getTriadicScheme(color) {
+        const { h, s, l } = color;
+        const h1 = (h + 120) % 360;
+        const h2 = (h + 240) % 360;
 
         return [
-            { h: hue, s: 100, l: 50 },
-            { h: h1, s: 100, l: 50 },
-            { h: h2, s: 100, l: 50 }
+            { h, s, l },
+            { h: h1, s, l },
+            { h: h2, s, l }
         ];
     },
 
